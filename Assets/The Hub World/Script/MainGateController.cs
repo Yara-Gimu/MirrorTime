@@ -60,7 +60,18 @@ public class MainGateController : MonoBehaviour
 
     public void CheckGateStatus()
     {
-        int currentProgress = PlayerPrefs.GetInt("GateProgress", 0);
+        // 🏗️ الترقية المعمارية: القراءة من المدير المركزي
+        int currentProgress = 0;
+        if (SaveManager.Instance != null)
+        {
+            currentProgress = SaveManager.Instance.currentGateProgress;
+        }
+        else
+        {
+            // خطة طوارئ لو اختبرتي المشهد بدون مدير الحفظ
+            currentProgress = PlayerPrefs.GetInt("GateProgress", 0);
+        }
+
         Material[] mats = mainGateRenderer.materials;
 
         if (currentProgress >= levelToLightRight)
@@ -143,6 +154,9 @@ public class MainGateController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
         
+        // 🏗️ الترقية المعمارية: إرسال إشارة لمدير البيانات لتسجيل إن اللاعب اتجه للنهاية
+        // EventManager.Trigger("Telemetry_Final_Gate_Entered");
+
         SceneManager.LoadScene(finalSceneName);
     }
 }

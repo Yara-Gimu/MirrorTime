@@ -10,7 +10,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Panels")]
     public GameObject mainButtonsPanel; 
     public GameObject settingsPanel;    
-    public GameObject creditsPanel;     
+    public GameObject creditsPanel;    
 
     [Header("Scenes Configuration")]
     [Tooltip("اسم مشهد البداية (ممر العلا)")]
@@ -20,8 +20,14 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
-        // هل اللاعب لعب من قبل؟
-        if (PlayerPrefs.HasKey("HasPlayedBefore")) 
+        // 🏗️ الترقية المعمارية: 
+        // بدلاً من PlayerPrefs، سنسأل مدير الحفظ (الذي سنبنيه لاحقاً)
+        // bool hasSave = SaveManager.Instance.HasSaveData();
+        
+        // مؤقتاً لحين بناء الـ SaveManager، سنستخدم طريقة بسيطة
+        bool hasSave = PlayerPrefs.HasKey("HasPlayedBefore"); 
+
+        if (hasSave) 
         {
             continueButton.gameObject.SetActive(true);
         }
@@ -37,20 +43,24 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnNewGameClicked()
     {
-        // نحفظ إن اللاعب بدأ اللعبة عشان يظهر زر الإكمال المرة الجاية
+        // 🏗️ الترقية المعمارية (قريباً):
+        // SaveManager.Instance.StartNewGame(); // تصفير الحفظ القديم
+        // EventManager.Trigger("Telemetry_NewGameStarted"); // إرسال إشارة للبيانات
+
         PlayerPrefs.SetInt("HasPlayedBefore", 1); 
         PlayerPrefs.Save();
 
-        // 🎬 التعديل السحري: الانتقال بنعومة لممر العلا
         if (FadeManager.instance != null)
             FadeManager.instance.LoadSceneSmoothly(newGameSceneName);
         else
-            SceneManager.LoadScene(newGameSceneName); // انتقال عادي لو الستارة مو موجودة
+            SceneManager.LoadScene(newGameSceneName); 
     }
 
     public void OnContinueClicked()
     {
-        // 🎬 التعديل السحري: الانتقال بنعومة للغرفة الحارسة
+        // 🏗️ الترقية المعمارية (قريباً):
+        // EventManager.Trigger("Telemetry_GameContinued"); 
+
         if (FadeManager.instance != null)
             FadeManager.instance.LoadSceneSmoothly(hubWorldSceneName);
         else
@@ -60,7 +70,7 @@ public class MainMenuManager : MonoBehaviour
     public void OnSettingsClicked()
     {
         mainButtonsPanel.SetActive(false); 
-        settingsPanel.SetActive(true);     
+        settingsPanel.SetActive(true);    
     }
 
     public void OnCreditsClicked()

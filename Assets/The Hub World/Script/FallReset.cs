@@ -9,18 +9,18 @@ public class FallReset : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            // 🏗️ الترقية المعمارية: إرسال إشارة لمدير البيانات لتسجيل مكان السقوط (Heatmap)
+            // EventManager.Trigger("Telemetry_Player_Fell", other.transform.position);
+
             CharacterController cc = other.GetComponent<CharacterController>();
             
             if (cc != null)
             {
-                // 1. إيقاف المتحكم عشان يسمح لنا ننقله
                 cc.enabled = false;
 
-                // 2. النقل
                 other.transform.position = respawnPoint.position;
                 other.transform.rotation = respawnPoint.rotation;
 
-                // 3. تشغيل المتحكم من جديد
                 cc.enabled = true;
             }
         }

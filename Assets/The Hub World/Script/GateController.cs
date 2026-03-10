@@ -21,7 +21,7 @@ public class GateController : MonoBehaviour
     public InputActionReference interactAction; 
     
     [Tooltip("لون الوميض اللي بيظهر وقت الانتقال (اختاري لون يناسب المرحلة)")]
-    public Color fadeColor = Color.white; // 🎨 التعديل الجديد هنا
+    public Color fadeColor = Color.white; 
 
     [Header("--- واجهة المستخدم (UI) ---")]
     public GameObject interactPrompt; 
@@ -56,7 +56,18 @@ public class GateController : MonoBehaviour
 
     public void CheckPermission()
     {
-        int currentProgress = PlayerPrefs.GetInt("GateProgress", 0);
+        // 🏗️ الترقية المعمارية: القراءة من المدير المركزي
+        int currentProgress = 0;
+        
+        if (SaveManager.Instance != null)
+        {
+            currentProgress = SaveManager.Instance.currentGateProgress;
+        }
+        else
+        {
+            // خطة طوارئ: في حال تم تشغيل المشهد للتجربة بدون الـ SaveManager
+            currentProgress = PlayerPrefs.GetInt("GateProgress", 0);
+        }
 
         if (isAlwaysOpen || currentProgress >= levelRequiredToOpen)
         {
@@ -127,7 +138,6 @@ public class GateController : MonoBehaviour
 
         if (whiteFade != null)
         {
-            // 🎨 اللمسة السحرية: تغيير لون الصورة قبل التلاشي
             Image fadeImage = whiteFade.GetComponent<Image>();
             if (fadeImage != null)
             {
@@ -142,6 +152,9 @@ public class GateController : MonoBehaviour
             }
             yield return new WaitForSeconds(0.5f); 
         }
+
+        // 🏗️ الترقية المعمارية: إرسال إشارة لمدير البيانات عند الدخول للبوابة (مؤجلة حالياً كتعليق)
+        // EventManager.Trigger("Telemetry_Gate_Entered", sceneToLoad);
 
         SceneManager.LoadScene(sceneToLoad);
     }

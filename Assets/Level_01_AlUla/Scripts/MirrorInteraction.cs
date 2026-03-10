@@ -1,10 +1,14 @@
 using UnityEngine;
+using UnityEngine.InputSystem; // ضروري لنظام التحكم الجديد
 
 public class MirrorInteraction : MonoBehaviour
 {
     [Header("عناصر واجهة المستخدم")]
-    public GameObject interactUI; // مكان نص التفاعل (اضغط E)
-    public GameObject comicCanvas; // شاشة الكوميكس المؤقتة
+    public GameObject interactUI; 
+    public GameObject comicCanvas; 
+
+    [Header("نظام الإدخال (الجديد)")]
+    public InputActionReference interactAction; // اسحبي زر E / أو مربع البلايستيشن هنا
 
     private bool isPlayerNear = false;
 
@@ -13,12 +17,18 @@ public class MirrorInteraction : MonoBehaviour
         if (interactUI != null) interactUI.SetActive(false);
     }
 
-    void Update()
+    // تفعيل زر التفاعل
+    void OnEnable()
     {
-        if (isPlayerNear && Input.GetKeyDown(KeyCode.E))
-        {
-            BreakTheMirror();
-        }
+        if (interactAction != null)
+            interactAction.action.performed += OnInteractPressed;
+    }
+
+    // إغلاق زر التفاعل
+    void OnDisable()
+    {
+        if (interactAction != null)
+            interactAction.action.performed -= OnInteractPressed;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,16 +49,26 @@ public class MirrorInteraction : MonoBehaviour
         }
     }
 
+    // هذه الدالة تشتغل تلقائياً متى ما ضغط اللاعب الزر (سواء كيبورد أو يد تحكم)
+    private void OnInteractPressed(InputAction.CallbackContext context)
+    {
+        if (isPlayerNear)
+        {
+            BreakTheMirror();
+        }
+    }
+
     void BreakTheMirror()
     {
-        // 🎬 التعديل السحري: نكلم المخرج يسوي تظليم، يفتح الكوميكس، ويخفي زر E
+        // 🏗️ الترقية: إرسال إشارة لمدير البيانات أن الكوميكس بدأ (لتتبع سلوك اللاعب)
+        // EventManager.Trigger("Telemetry_Cinematic_Started");
+
         if (FadeManager.instance != null)
         {
             FadeManager.instance.ShowUIWithFade(comicCanvas, interactUI);
         }
         else
         {
-            // لو المخرج مو موجود (للاحتياط) يفتحها فجأة
             if (comicCanvas != null) comicCanvas.SetActive(true);
             if (interactUI != null) interactUI.SetActive(false);
         }

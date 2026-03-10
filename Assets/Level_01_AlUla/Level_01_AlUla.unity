@@ -946,6 +946,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MirrorInteraction
   interactUI: {fileID: 2116867500}
   comicCanvas: {fileID: 1608303797}
+  interactAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &713379447
 GameObject:
   m_ObjectHideFlags: 0
@@ -2394,8 +2395,11 @@ MonoBehaviour:
   jumpHeight: 1.5
   gravity: -9.81
   fallMultiplier: 2.5
+  coyoteTime: 0.15
+  coyoteTimeCounter: 0
   mainCamera: {fileID: 1620367111}
   animator: {fileID: 1372759253}
+  TurnSmoothVelocity: 0
 --- !u!95 &1372759253
 Animator:
   serializedVersion: 7
@@ -3007,6 +3011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ComicSequence
   glassSmashSound: {fileID: 8300000, guid: 0b5530b80dcfd3e4eade916a17b21516, type: 3}
   hubWorldSceneName: The Hub World
+  skipOrBreakAction: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!82 &1608303803
 AudioSource:
   m_ObjectHideFlags: 0

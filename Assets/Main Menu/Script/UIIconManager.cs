@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using UnityEngine.EventSystems; // ضروري للتحكم بالأزرار
+using UnityEngine.EventSystems;
 
 public class UIIconManager : MonoBehaviour
 {
     [Header("--- Main Menu Buttons (إعدادات أزرار القائمة) ---")]
-    public GameObject continueButton; // زر إكمال الرحلة
-    public GameObject newGameButton;  // زر لعبة جديدة
+    public GameObject continueButton; 
+    public GameObject newGameButton;  
 
     [Header("--- UI Images (صور الأزرار في الشاشة) ---")]
     public Image selectIcon; 
@@ -27,26 +27,26 @@ public class UIIconManager : MonoBehaviour
 
     void Start()
     {
-        // 1. فحص ملف التخزين (هذا مجرد مثال، 1 = فيه تخزين، 0 = لاعب جديد)
-        bool hasSaveFile = PlayerPrefs.GetInt("HasSaveFile", 0) == 1; 
+        // 🏗️ الترقية المعمارية:
+        // bool hasSaveFile = SaveManager.Instance.HasSaveData();
+        
+        // مؤقتاً: وحدنا الكلمة السرية مع كود القائمة الرئيسية لتجنب الأخطاء (Bugs)
+        bool hasSaveFile = PlayerPrefs.GetInt("HasPlayedBefore", 0) == 1; 
 
-        // 2. تصفير التحديد الحالي
         EventSystem.current.SetSelectedGameObject(null);
 
-        // 3. تحديد الزر الأول بناءً على حالة اللاعب
         if (hasSaveFile)
         {
-            continueButton.SetActive(true); // إظهار زر الإكمال
-            EventSystem.current.SetSelectedGameObject(continueButton); // تحديده كأول زر
+            continueButton.SetActive(true); 
+            EventSystem.current.SetSelectedGameObject(continueButton); 
         }
         else
         {
-            continueButton.SetActive(false); // إخفاء زر الإكمال لأنه لاعب جديد
-            EventSystem.current.SetSelectedGameObject(newGameButton); // تحديد "لعبة جديدة" كأول زر
+            continueButton.SetActive(false); 
+            EventSystem.current.SetSelectedGameObject(newGameButton); 
         }
     }
 
-    // دالة تغيير أيقونات التحكم تلقائياً
     public void OnControlsChanged(PlayerInput playerInput)
     {
         string currentDevice = playerInput.currentControlScheme;
@@ -61,7 +61,6 @@ public class UIIconManager : MonoBehaviour
             Gamepad gamepad = Gamepad.current;
             if (gamepad != null)
             {
-                // طريقة آمنة للتعرف على أيدي بلايستيشن 
                 if (gamepad is UnityEngine.InputSystem.DualShock.DualShockGamepad || gamepad.name.Contains("DualSense"))
                 {
                     selectIcon.sprite = psSelect;
