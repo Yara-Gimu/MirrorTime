@@ -8,10 +8,17 @@ public class PlayerMoveState : PlayerBaseState
 
     public override void UpdateState()
     {
-        // 🪂 اللمسة الأخيرة: هل نوار لم تعد تلمس الأرض؟ اذهب لحالة السقوط!
+        // 🪂 هل نوار لم تعد تلمس الأرض؟ اذهب لحالة السقوط!
         if (!ctx.Controller.isGrounded)
         {
             ctx.SwitchState(new PlayerFallState(ctx));
+            return;
+        }
+
+        // 👇 الانتقال لحالة الزحف حتى لو كانت تمشي
+        if (ctx.IsPronePressed)
+        {
+            ctx.SwitchState(new PlayerProneState(ctx));
             return;
         }
 
@@ -21,12 +28,12 @@ public class PlayerMoveState : PlayerBaseState
         // 🦘 هل ضغط اللاعب زر القفز وكان الـ Coyote Time مسموح؟
         if (ctx.IsJumpPressed && ctx.coyoteTimeCounter > 0f)
         {
-            ctx.IsJumpPressed = false; // تصفير الزر
+            ctx.IsJumpPressed = false; 
             ctx.SwitchState(new PlayerJumpState(ctx));
-            return; // إيقاف الكود هنا
+            return; 
         }
 
-        // هل شال يده عن الكيبورد/القير؟
+        // 🛑 هل شال يده عن الكيبورد/القير؟
         if (ctx.CurrentMovementInput.magnitude <= 0.1f)
         {
             ctx.SwitchState(new PlayerIdleState(ctx));

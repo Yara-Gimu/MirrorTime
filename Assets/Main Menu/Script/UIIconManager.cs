@@ -27,12 +27,8 @@ public class UIIconManager : MonoBehaviour
 
     void Start()
     {
-        // 🏗️ الترقية المعمارية:
-        // bool hasSaveFile = SaveManager.Instance.HasSaveData();
-        
-        // مؤقتاً: وحدنا الكلمة السرية مع كود القائمة الرئيسية لتجنب الأخطاء (Bugs)
-        bool hasSaveFile = PlayerPrefs.GetInt("HasPlayedBefore", 0) == 1; 
-
+       
+        bool hasSaveFile = SaveManager.Instance.HasSaveData();
         EventSystem.current.SetSelectedGameObject(null);
 
         if (hasSaveFile)

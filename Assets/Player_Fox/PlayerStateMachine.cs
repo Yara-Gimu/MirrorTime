@@ -7,6 +7,7 @@ public class PlayerStateMachine : MonoBehaviour
     [Header("--- إعدادات نوار الأساسية ---")]
     public float walkSpeed = 3f;
     public float runSpeed = 6f;
+    public float proneSpeed = 1.5f; // تمت إضافة سرعة الزحف
     public float rotationSmoothTime = 0.1f;
     public float jumpHeight = 1.5f;
     public float gravity = -9.81f;
@@ -25,12 +26,15 @@ public class PlayerStateMachine : MonoBehaviour
     // --- متغيرات لتخزين مدخلات اللاعب ---
     public Vector2 CurrentMovementInput { get; private set; }
     public bool IsRunPressed { get; private set; }
-    
-    // 🛠️ التعديل: صارت set بدال private set عشان نقدر نصفرها بعد القفز
     public bool IsJumpPressed { get; set; } 
+    public bool IsPronePressed { get; set; } // تمت الإضافة لمعرفة هل اللاعب ضغط زحف أم لا
     
     public float CurrentVelocityY { get; set; }
     public float TurnSmoothVelocity;
+
+    // متغيرات لتخزين حجم اللاعب الأصلي عشان نرجعه بعد الزحف
+    public float originalHeight;
+    public Vector3 originalCenter;
 
     // --- نظام الحالات (State Machine) ---
     private PlayerBaseState currentState;
@@ -46,12 +50,15 @@ public class PlayerStateMachine : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        // حفظ حجم نوار الأصلي
+        originalHeight = Controller.height;
+        originalCenter = Controller.center;
+
         SwitchState(new PlayerIdleState(this));
     }
 
     void Update()
     {
-        // 🛠️ التعديل: حساب زمن الذئب باستمرار
         HandleCoyoteTime();
 
         if (currentState != null)
@@ -62,7 +69,6 @@ public class PlayerStateMachine : MonoBehaviour
         UpdateAnimations();
     }
 
-    // حساب الـ Coyote Time
     private void HandleCoyoteTime()
     {
         if (Controller.isGrounded)
@@ -112,6 +118,14 @@ public class PlayerStateMachine : MonoBehaviour
         if (value.isPressed && animator != null)
         {
             animator.SetTrigger("Interact");
+        }
+    }
+
+    public void OnProne(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            IsPronePressed = !IsPronePressed; // ضغطة للنزول وضغطة للنهوض
         }
     }
 }

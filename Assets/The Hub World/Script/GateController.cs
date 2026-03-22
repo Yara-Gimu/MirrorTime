@@ -3,24 +3,34 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic; // ⚠️ إضافة مهمة جداً لمدير الأحداث
 
 public class GateController : MonoBehaviour
 {
     [Header("--- إعدادات القفل ---")]
-    public bool isAlwaysOpen = false;   // ضعي صح لبوابة العلا فقط
-    public int levelRequiredToOpen = 1; // رقم المرحلة المطلوبة (ثاج=1, الفاو=2, تاروت=3)
+    public bool isAlwaysOpen = false;   
+    public int levelRequiredToOpen = 1; 
 
     [Header("--- المجسمات والإضاءة ---")]
     public GameObject spotLightObject;  
     public GameObject portalGlowObject; 
-    public GameObject darkPatternsObject; 
-    public GameObject glowPatternsObject; 
 
-    [Header("--- إعدادات الانتقال (الجديدة) ---")]
+    [Header("--- فكرة يوري: تبديل ماتيريال النقش فقط ---")]
+    [Tooltip("مجسم البوابة اللي عليه النقش")]
+    public MeshRenderer gateRenderer; 
+    
+    [Tooltip("رقم الماتيريال حق النقش في قائمة الإنسبكتور (غالباً 1 إذا الخشب 0)")]
+    public int patternMaterialIndex = 1; 
+    
+    [Tooltip("ماتيريال النقش وهو طافي (عادي)")]
+    public Material darkPatternMaterial; 
+    
+    [Tooltip("ماتيريال النقش وهو شغال (مضيء)")]
+    public Material glowingPatternMaterial; 
+
+    [Header("--- إعدادات الانتقال ---")]
     public string sceneToLoad; 
     public InputActionReference interactAction; 
-    
-    [Tooltip("لون الوميض اللي بيظهر وقت الانتقال (اختاري لون يناسب المرحلة)")]
     public Color fadeColor = Color.white; 
 
     [Header("--- واجهة المستخدم (UI) ---")]
@@ -46,6 +56,7 @@ public class GateController : MonoBehaviour
 
     private void OnEnable()
     {
+        if (interactAction != null) interactAction.action.Enable(); 
         if (interactAction != null) interactAction.action.performed += OnInteractPressed;
     }
 
@@ -56,7 +67,6 @@ public class GateController : MonoBehaviour
 
     public void CheckPermission()
     {
-        // 🏗️ الترقية المعمارية: القراءة من المدير المركزي
         int currentProgress = 0;
         
         if (SaveManager.Instance != null)
@@ -65,7 +75,6 @@ public class GateController : MonoBehaviour
         }
         else
         {
-            // خطة طوارئ: في حال تم تشغيل المشهد للتجربة بدون الـ SaveManager
             currentProgress = PlayerPrefs.GetInt("GateProgress", 0);
         }
 
@@ -85,8 +94,17 @@ public class GateController : MonoBehaviour
 
         if (spotLightObject != null) spotLightObject.SetActive(true);
         if (portalGlowObject != null) portalGlowObject.SetActive(true);
-        if (darkPatternsObject != null) darkPatternsObject.SetActive(false);
-        if (glowPatternsObject != null) glowPatternsObject.SetActive(true);
+
+        // 🌟 فكرتك: تغيير ماتيريال النقش إلى المضيء
+        if (gateRenderer != null && glowingPatternMaterial != null)
+        {
+            Material[] mats = gateRenderer.materials; // نسحب قائمة الماتيريالز
+            if (mats.Length > patternMaterialIndex)
+            {
+                mats[patternMaterialIndex] = glowingPatternMaterial; // نغير النقش بس
+                gateRenderer.materials = mats; // نرجع القائمة للمجسم
+            }
+        }
 
         if (ambientLoopSound != null && !ambientLoopSound.isPlaying) ambientLoopSound.Play();
     }
@@ -97,8 +115,17 @@ public class GateController : MonoBehaviour
 
         if (spotLightObject != null) spotLightObject.SetActive(false);
         if (portalGlowObject != null) portalGlowObject.SetActive(false);
-        if (darkPatternsObject != null) darkPatternsObject.SetActive(true);
-        if (glowPatternsObject != null) glowPatternsObject.SetActive(false);
+
+        // 🌟 فكرتك: تغيير ماتيريال النقش إلى الطافي
+        if (gateRenderer != null && darkPatternMaterial != null)
+        {
+            Material[] mats = gateRenderer.materials; 
+            if (mats.Length > patternMaterialIndex)
+            {
+                mats[patternMaterialIndex] = darkPatternMaterial; 
+                gateRenderer.materials = mats; 
+            }
+        }
 
         if (ambientLoopSound != null) ambientLoopSound.Stop();
     }
@@ -136,6 +163,9 @@ public class GateController : MonoBehaviour
         if (interactPrompt != null) interactPrompt.SetActive(false);
         if (teleportSound != null) teleportSound.Play();
 
+        PlayerStateMachine player = FindObjectOfType<PlayerStateMachine>();
+        if (player != null) player.enabled = false;
+
         if (whiteFade != null)
         {
             Image fadeImage = whiteFade.GetComponent<Image>();
@@ -153,8 +183,13 @@ public class GateController : MonoBehaviour
             yield return new WaitForSeconds(0.5f); 
         }
 
-        // 🏗️ الترقية المعمارية: إرسال إشارة لمدير البيانات عند الدخول للبوابة (مؤجلة حالياً كتعليق)
-        // EventManager.Trigger("Telemetry_Gate_Entered", sceneToLoad);
+        // 📡 الترقية المعمارية: إرسال بيانات التتبع (Telemetry) لمدير الأحداث
+        Dictionary<string, object> gateData = new Dictionary<string, object>
+        {
+            { "DestinationScene", sceneToLoad },
+            { "TimeEntered", Time.time }
+        };
+        EventManager.TriggerEvent("Telemetry_Gate_Entered", gateData);
 
         SceneManager.LoadScene(sceneToLoad);
     }
