@@ -6,7 +6,8 @@ public class AAA_SinglePressMirror : MonoBehaviour
     [Header("--- عناصر البيئة والـ 3D UI ---")]
     [Tooltip("اسحبي مجسم الـ Sprite Renderer (صورة الزر) هنا")]
     public SpriteRenderer iconSprite;
-    [Tooltip("مجسم الكوميكس اللي تبينه يظهر في النهاية")]
+    
+    [Tooltip("مجسم الكانفاس حق الكوميكس اللي تبينه يظهر في النهاية")]
     public GameObject comicCanvas;
 
     [Header("--- أيقونات الأجهزة ---")]
@@ -66,10 +67,10 @@ public class AAA_SinglePressMirror : MonoBehaviour
     {
         if (isMirrorBroken || iconSprite == null || mainCamera == null) return;
 
-        // 1. تحديث شكل الأيقونة حسب الجهاز (كيبورد/سوني/اكس بوكس)
+        // 1. تحديث شكل الأيقونة حسب الجهاز
         UpdateIconBasedOnDevice();
 
-        // 2. الظهور والاختفاء الناعم بناءً على قرب نوار
+        // 2. الظهور والاختفاء الناعم
         targetAlpha = isPlayerNear ? 1f : 0f;
         Color currentColor = iconSprite.color;
         currentColor.a = Mathf.Lerp(currentColor.a, targetAlpha, Time.deltaTime * fadeSpeed);
@@ -94,7 +95,6 @@ public class AAA_SinglePressMirror : MonoBehaviour
         if (other.CompareTag("Player")) isPlayerNear = false;
     }
 
-    // الدالة تشتغل بضغطة واحدة فقط (بدون انتظار)
     private void OnInteractPressed(InputAction.CallbackContext context)
     {
         if (isPlayerNear && !isMirrorBroken)
@@ -110,17 +110,23 @@ public class AAA_SinglePressMirror : MonoBehaviour
         // إخفاء الأيقونة فوراً
         if (iconSprite != null) iconSprite.enabled = false;
 
-        // تشغيل الكوميكس باستخدام الـ FadeManager
-        if (FadeManager.instance != null)
+        // 🌟 السحر هنا: نفعّل الكانفاس ونأمر الكوميكس يشتغل فوراً
+        if (comicCanvas != null)
         {
-            FadeManager.instance.ShowUIWithFade(comicCanvas, null);
-        }
-        else
-        {
-            if (comicCanvas != null) comicCanvas.SetActive(true);
+            comicCanvas.SetActive(true);
+
+            ComicSequence comicScript = comicCanvas.GetComponent<ComicSequence>();
+            if (comicScript != null)
+            {
+                comicScript.StartSequenceFromMirror(); // أمر البدء المباشر
+            }
+            else
+            {
+                Debug.LogError("⚠️ تأكدي إن سكربت ComicSequence محطوط على الكانفاس!");
+            }
         }
 
-        // إيقاف السكربت عشان ما ينضغط الزر مرتين
+        // إيقاف هذا السكربت عشان ما ينضغط الزر مرتين
         this.enabled = false;
     }
 

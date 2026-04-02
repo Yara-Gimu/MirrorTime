@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // ضروري لمعرفة يد التحكم
+using UnityEngine.InputSystem;
+using System.Collections;
 
 public class DynamicInteractPrompt : MonoBehaviour
 {
@@ -7,33 +8,26 @@ public class DynamicInteractPrompt : MonoBehaviour
     public SpriteRenderer iconSprite; 
 
     [Header("--- أيقونات الأجهزة ---")]
-    public Sprite kbIcon;   // حطي صورة حرف E أو الكيبورد هنا
-    public Sprite xboxIcon; // حطي صورة X للاكس بوكس
-    public Sprite psIcon;   // حطي صورة مربع للبلايستيشن
+    public Sprite kbIcon;   
+    public Sprite xboxIcon; 
+    public Sprite psIcon;   
 
-    [Header("--- إعدادات الحركة والظهور ---")]
+    [Header("--- إعدادات الظهور ---")]
     public float fadeSpeed = 5f; 
-    public float floatSpeed = 2f; 
-    public float floatHeight = 0.1f; 
+    public float showDelay = 3.0f; 
 
     private bool isPlayerNear = false;
     private float targetAlpha = 0f;
-    private Vector3 startPos;
-    private Camera mainCamera;
-    
-    // مرجع للاعب عشان نقرأ منه نوع التحكم
     private PlayerInput playerInput;
+
+    // 🌟 المتغير السري: هل انتهى التأخير الأول؟
+    private bool introDelayFinished = false;
 
     void Start()
     {
-        mainCamera = Camera.main;
-        
-        // نبحث عن اللاعب في المشهد وناخذ الـ PlayerInput حقه
         playerInput = FindFirstObjectByType<PlayerInput>();
-
         if (iconSprite != null)
         {
-            startPos = iconSprite.transform.localPosition;
             Color c = iconSprite.color;
             c.a = 0f;
             iconSprite.color = c;
@@ -42,63 +36,70 @@ public class DynamicInteractPrompt : MonoBehaviour
 
     void Update()
     {
-        if (iconSprite == null || mainCamera == null) return;
+        if (iconSprite == null) return;
 
-        // 1. تحديث الأيقونة حسب يد التحكم (الفكرة حقتك)
         UpdateIconBasedOnDevice();
 
-        // 2. الظهور والاختفاء الناعم
+        // التلاشي الناعم (الفيد)
         targetAlpha = isPlayerNear ? 1f : 0f;
         Color currentColor = iconSprite.color;
         currentColor.a = Mathf.Lerp(currentColor.a, targetAlpha, Time.deltaTime * fadeSpeed);
         iconSprite.color = currentColor;
 
-        // 3. حركة الطفو ومواجهة الكاميرا (Billboard)
-        if (currentColor.a > 0.01f)
-        {
-            float newY = startPos.y + Mathf.Sin(Time.time * floatSpeed) * floatHeight;
-            iconSprite.transform.localPosition = new Vector3(startPos.x, newY, startPos.z);
-
-            iconSprite.transform.LookAt(iconSprite.transform.position + mainCamera.transform.rotation * Vector3.forward,
-                                        mainCamera.transform.rotation * Vector3.up);
-        }
+        // Billboard: مواجهة الكاميرا دائماً
+        iconSprite.transform.LookAt(iconSprite.transform.position + Camera.main.transform.rotation * Vector3.forward,
+                                    Camera.main.transform.rotation * Vector3.up);
     }
 
-    // دالة تحديث الأيقونة الذكية
     private void UpdateIconBasedOnDevice()
     {
         if (playerInput == null) return;
-
         string currentDevice = playerInput.currentControlScheme;
 
-        if (currentDevice == "Keyboard&Mouse")
-        {
-            iconSprite.sprite = kbIcon;
-        }
+        if (currentDevice == "Keyboard&Mouse") iconSprite.sprite = kbIcon;
         else if (currentDevice == "Gamepad")
         {
             Gamepad gamepad = Gamepad.current;
             if (gamepad != null)
             {
                 if (gamepad is UnityEngine.InputSystem.DualShock.DualShockGamepad || gamepad.name.Contains("DualSense"))
-                {
                     iconSprite.sprite = psIcon;
-                }
                 else
-                {
                     iconSprite.sprite = xboxIcon;
-                }
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) isPlayerNear = true;
+        if (other.CompareTag("Player"))
+        {
+            // 🌟 التحقق: إذا كان هذا اللقاء الأول، انتظر. إذا لا، أظهر فوراً.
+            if (!introDelayFinished)
+            {
+                StartCoroutine(WaitToShowFirstTime());
+            }
+            else
+            {
+                isPlayerNear = true; 
+            }
+        }
+    }
+
+    IEnumerator WaitToShowFirstTime()
+    {
+        yield return new WaitForSeconds(showDelay);
+        isPlayerNear = true;
+        introDelayFinished = true; // 🌟 علامة أننا انتهينا من التأخير السينمائي للأبد
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player")) isPlayerNear = false;
+        if (other.CompareTag("Player"))
+        {
+            // إذا خرج اللاعب والعملية لم تنتهِ، نوقفها.
+            StopAllCoroutines();
+            isPlayerNear = false;
+        }
     }
 }

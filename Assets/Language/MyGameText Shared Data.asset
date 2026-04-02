@@ -123,6 +123,34 @@ MonoBehaviour:
     m_Key: BTN_BACK
     m_Metadata:
       m_Items: []
+  - m_Id: 39593173077577728
+    m_Key: UI_TITLE_PAUSE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39593402568921088
+    m_Key: UI_BTN_RESUME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39593817972789248
+    m_Key: UI_BTN_MAINMENU
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39593981403844608
+    m_Key: UI_PROMPT_PAUSE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39608571346804736
+    m_Key: UI_TAB_AUDIO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39608785554104320
+    m_Key: UI_TAB_DISPLAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39608853212422144
+    m_Key: UI_TAB_ACCESS
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

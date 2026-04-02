@@ -126,6 +126,34 @@ MonoBehaviour:
     m_Localized: Back
     m_Metadata:
       m_Items: []
+  - m_Id: 39593173077577728
+    m_Localized: Paused
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39593402568921088
+    m_Localized: Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39593817972789248
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39593981403844608
+    m_Localized: Press to Pause
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39608571346804736
+    m_Localized: Audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39608785554104320
+    m_Localized: Display
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39608853212422144
+    m_Localized: Accessibility
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

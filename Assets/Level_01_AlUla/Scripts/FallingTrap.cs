@@ -1,40 +1,33 @@
 using UnityEngine;
 using System.Collections;
-using Unity.Cinemachine; // 🌟 السر هنا: أضفنا هذي المكتبة عشان يونيتي يفهم الإمبلس
+using Unity.Cinemachine;
+using UnityEngine.Audio; // 🌟 ضروري للتحكم في الميكسر
 
 public class FallingTrap : MonoBehaviour
 {
-    // سوينا كلاس صغير داخلي عشان نرتب الإعدادات في الإنسبكتور لكل صخرة لحالها
     [System.Serializable]
     public class RockPiece
     {
-        [Tooltip("المجسم اللي بيطيح")]
         public Transform rockTransform;
-        
-        [Tooltip("نقطة السقوط (الهدف)")]
         public Transform targetDropPosition;
-        
-        [Tooltip("كم ثانية يتأخر قبل لا يطيح؟ (الأساسي خليه 0، الباقين 0.3 و 0.6)")]
         public float fallDelay = 0f;
-
-        [Tooltip("مقطع الصوت الخاص بهذي الصخرة لما تضرب الأرض")]
         public AudioClip rockSound; 
-        
-        // 🌟 التعديل الجديد: خانة عشان نسحب فيها الـ Impulse Source حق الصخرة
-        [Tooltip("مكون Cinemachine Impulse Source الموجود على مجسم الصخرة")]
         public CinemachineImpulseSource impulseSource;
     }
 
-    [Header("قائمة الصخور اللي بتطيح")]
-    [Tooltip("حددي عدد الصخور واسحبي كل صخرة وهدفها وصوتها وهاذ الامبلس")]
+    [Header("قائمة الصخور")]
     [SerializeField] RockPiece[] rocks; 
 
-    [Header("إعدادات السقوط السينمائي")]
+    [Header("إعدادات السقوط")]
     [SerializeField] float gravityAcceleration = 15f; 
     
-    [Header("--- المؤثرات السينمائية ---")]
+    [Header("--- المؤثرات الصوتية والميكسر ---")]
     [SerializeField] ParticleSystem impactDust; 
-    [SerializeField] AudioSource audioSource; 
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioMixer mixer; // 🌟 اسحبي الميكسر هنا
+    
+    // 🌟 تم تعديل القيمة الافتراضية هنا لتطابق اسم الميكسر اللي سويناه
+    [SerializeField] string musicVolumeParam = "InsideVol"; 
 
     private bool hasFallen = false; 
 
@@ -44,7 +37,15 @@ public class FallingTrap : MonoBehaviour
         {
             hasFallen = true; 
             
-            // هذي الحلقة (foreach) تمر على كل الصخور وتخليها تطيح بناءً على وقت التأخير حقها
+            Animator playerAnim = other.GetComponent<Animator>();
+            if (playerAnim != null)
+            {
+                StartCoroutine(DelayedCough(playerAnim, 0.7f));
+            }
+
+            // 🌟 خفض الموسيقى بنعومة (AAA Ducking)
+            StartCoroutine(AudioDuckingSequence());
+
             foreach (var rock in rocks)
             {
                 StartCoroutine(FallToTarget(rock));
@@ -52,17 +53,49 @@ public class FallingTrap : MonoBehaviour
         }
     }
 
-    IEnumerator FallToTarget(RockPiece rockPiece)
+    // 🌟 نظام Ducking احترافي (AAA) ذو تدرج ناعم
+    IEnumerator AudioDuckingSequence()
     {
-        // 1. إذا كان فيه تأخير (Delay)، ننتظر قبل ما تبدأ الصخرة تطيح
-        if (rockPiece.fallDelay > 0)
+        float fadeOutTime = 0.2f; // 1. نزول سريع جداً مع الضربة
+        float holdTime = 2.5f;    // 2. بقاء الصوت منخفض أثناء غبار الصخور
+        float fadeInTime = 2.0f;  // 3. رجوع هادئ للموسيقى
+        
+        float targetVolume = -20f;
+        float originalVolume = 0f; 
+        float timer = 0f;
+
+        // 1. خفض سريع للصوت (Fade Out)
+        while(timer < fadeOutTime) 
         {
-            yield return new WaitForSeconds(rockPiece.fallDelay);
+            timer += Time.deltaTime;
+            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(originalVolume, targetVolume, timer / fadeOutTime));
+            yield return null;
         }
 
-        float currentSpeed = 0f;
+        // 2. البقاء على الصوت المنخفض (Hold)
+        yield return new WaitForSeconds(holdTime);
 
-        // 2. حركة السقوط
+        // 3. عودة الصوت الطبيعي بنعومة (Fade In)
+        timer = 0f;
+        while(timer < fadeInTime) 
+        {
+            timer += Time.deltaTime;
+            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(targetVolume, originalVolume, timer / fadeInTime));
+            yield return null;
+        }
+    }
+
+    IEnumerator DelayedCough(Animator anim, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        anim.SetTrigger("Cough");
+    }
+
+    IEnumerator FallToTarget(RockPiece rockPiece)
+    {
+        if (rockPiece.fallDelay > 0) yield return new WaitForSeconds(rockPiece.fallDelay);
+
+        float currentSpeed = 0f;
         while (Vector3.Distance(rockPiece.rockTransform.position, rockPiece.targetDropPosition.position) > 0.05f)
         {
             currentSpeed += gravityAcceleration * Time.deltaTime;
@@ -70,36 +103,18 @@ public class FallingTrap : MonoBehaviour
             yield return null; 
         }
 
-        // 3. استقرار الصخرة في الإحداثيات المحددة
         rockPiece.rockTransform.position = rockPiece.targetDropPosition.position;
-        
-        // 4. 💥 تشغيل المؤثرات والصوت والاهتزاز الخاص بهذي الصخرة بالذات
-        // أرسلنا الامبلس سورس للدالة
         PlayImpactEffects(rockPiece.targetDropPosition.position, rockPiece.rockSound, rockPiece.impulseSource);
     }
 
-    // 🌟 حدثنا هذي الدالة لتستقبل الـ ImpulseSource
     private void PlayImpactEffects(Vector3 dropPosition, AudioClip soundToPlay, CinemachineImpulseSource impulseToTrigger)
     {
-        // تشغيل الغبار في مكان الصخرة اللي طاحت الحين
-        if (impactDust != null)
-        {
-            impactDust.transform.position = dropPosition;
-            impactDust.Play();
-        }
+        if (impactDust != null && !impactDust.isPlaying) impactDust.Play();
 
-        // تشغيل الصوت المخصص للصخرة (إذا كنتِ حاطة لها صوت)
         if (audioSource != null && soundToPlay != null)
-        {
             audioSource.PlayOneShot(soundToPlay); 
-        }
         
-        // 🌟 أهم إضافة: اهتزاز الشاشة الآن!
         if (impulseToTrigger != null)
-        {
-            // إطلاق الاهتزاز بقوة 1 (يمكنك مضاعفتها هنا)
-            impulseToTrigger.GenerateImpulse();
-            Debug.Log("💥 الشاشة تهتز الآن عند سقوط الصخرة!");
-        }
+            impulseToTrigger.GenerateImpulseWithForce(1f); 
     }
 }

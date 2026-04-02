@@ -12,8 +12,9 @@ public class CinematicIntroHandler : MonoBehaviour
     [SerializeField] float walkSpeed = 2.0f; 
     [SerializeField] float walkDuration = 4.0f; 
 
-    [Header("السكربت الأساسي (ضروري عشان نوقفه)")]
-    [SerializeField] PlayerStateMachine mainPlayerScript; 
+    [Header("السكربتات اللي نبغى نقفلها وقت المشهد")]
+    [Tooltip("اسحبي هنا PlayerStateMachine، وأي سكربت مسؤول عن الماوس أو لف الكاميرا")]
+    [SerializeField] Behaviour[] scriptsToLock; // 🌟 السر هنا لتقفيل كل شيء
 
     Animator animator;
     CharacterController characterController;
@@ -23,16 +24,12 @@ public class CinematicIntroHandler : MonoBehaviour
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
 
-        // 1. تنويم السكربت الأساسي
-        if (mainPlayerScript != null) 
-        {
-            mainPlayerScript.enabled = false;
-        }
+        // 1. تنويم كل السكربتات المسؤولة عن التحكم
+        LockPlayerControls(true);
 
         if (animator != null) 
         {
             animator.SetFloat("Speed", 0f);
-            // 🪂 الحل السحري: نجبر الأنيميتور يفهم إنها على الأرض عشان ما تطير
             animator.SetBool("IsGrounded", true); 
         }
 
@@ -50,7 +47,6 @@ public class CinematicIntroHandler : MonoBehaviour
         {
             if (characterController != null)
             {
-                // 🧲 استخدمنا Move مع جاذبية قوية عشان نضمن إنها تلصق بالأرض وما تعلق بالهواء
                 Vector3 moveDir = transform.forward * walkSpeed;
                 moveDir.y = -9.81f; 
                 characterController.Move(moveDir * Time.deltaTime); 
@@ -60,10 +56,19 @@ public class CinematicIntroHandler : MonoBehaviour
 
         if (animator != null) animator.SetFloat("Speed", 0f); 
 
-        // 2. انتهى المشهد! نرجع التحكم
-        if (mainPlayerScript != null) 
+        // 2. انتهى المشهد! نرجع نفتح كل السكربتات ونرجع التحكم
+        LockPlayerControls(false);
+    }
+
+    // 🌟 دالة مساعدة تقفل وتفتح السكربتات بضغطة زر
+    void LockPlayerControls(bool isLocked)
+    {
+        foreach (var script in scriptsToLock)
         {
-            mainPlayerScript.enabled = true;
+            if (script != null)
+            {
+                script.enabled = !isLocked; 
+            }
         }
     }
 }
