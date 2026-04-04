@@ -370,6 +370,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ground_Cave_D
       objectReference: {fileID: 0}
+    - target: {fileID: 3850468024684096868, guid: 3de5148129bc85948acb24622e1c5ee9, type: 3}
+      propertyPath: m_TagString
+      value: Stone
+      objectReference: {fileID: 0}
     - target: {fileID: 6026704819711148178, guid: 3de5148129bc85948acb24622e1c5ee9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -598,6 +602,10 @@ PrefabInstance:
     - target: {fileID: 3850468024684096868, guid: 3de5148129bc85948acb24622e1c5ee9, type: 3}
       propertyPath: m_Name
       value: Ground_Cave_D (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3850468024684096868, guid: 3de5148129bc85948acb24622e1c5ee9, type: 3}
+      propertyPath: m_TagString
+      value: Stone
       objectReference: {fileID: 0}
     - target: {fileID: 6026704819711148178, guid: 3de5148129bc85948acb24622e1c5ee9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -5381,6 +5389,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ground_Cave_A
       objectReference: {fileID: 0}
+    - target: {fileID: 3891908200146587722, guid: 732f901be6361bd45989cb8196f683d2, type: 3}
+      propertyPath: m_TagString
+      value: Stone
+      objectReference: {fileID: 0}
     - target: {fileID: 6933409271261519968, guid: 732f901be6361bd45989cb8196f683d2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -7621,6 +7633,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ground_Cave_C
       objectReference: {fileID: 0}
+    - target: {fileID: 6588113581762439848, guid: 2caf1e27dea9af347a4438795f887095, type: 3}
+      propertyPath: m_TagString
+      value: Stone
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9028,6 +9044,10 @@ PrefabInstance:
     - target: {fileID: 1502038320044356790, guid: dd67638cac61f0241b71c5e56e9738c8, type: 3}
       propertyPath: m_Name
       value: Ground_Cave_B
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502038320044356790, guid: dd67638cac61f0241b71c5e56e9738c8, type: 3}
+      propertyPath: m_TagString
+      value: Stone
       objectReference: {fileID: 0}
     - target: {fileID: 5819569817690653172, guid: dd67638cac61f0241b71c5e56e9738c8, type: 3}
       propertyPath: m_LocalScale.x
@@ -19858,7 +19878,7 @@ MonoBehaviour:
   xboxIcon: {fileID: 21300000, guid: a3b5dddb5b89b7344b9ac92148509a65, type: 3}
   psIcon: {fileID: 21300000, guid: 64d25ca31c975654a9fcda39e4d1602c, type: 3}
   fadeSpeed: 5
-  showDelay: 3
+  showDelay: 4
 --- !u!135 &1222632823
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -26254,6 +26274,8 @@ GameObject:
   - component: {fileID: 1372759251}
   - component: {fileID: 1372759250}
   - component: {fileID: 1372759255}
+  - component: {fileID: 1372759257}
+  - component: {fileID: 1372759256}
   m_Layer: 0
   m_Name: Player_Fox
   m_TagString: Player
@@ -26402,6 +26424,142 @@ MonoBehaviour:
   - {fileID: 1372759252}
   - {fileID: 1372759251}
   - {fileID: 837864211}
+--- !u!114 &1372759256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372759249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f724e949f2069854bb140c57af35c1a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FootstepManager
+  sand:
+    walkSounds:
+    - {fileID: 8300000, guid: 557e96b16076cb84285c90941906b44c, type: 3}
+    runSounds:
+    - {fileID: 8300000, guid: 82b9e7907a6c3154b86a53c1be46ff71, type: 3}
+    jumpTakeoffSounds:
+    - {fileID: 8300000, guid: b120cc7d7055a284ea89422d100043e0, type: 3}
+    jumpLandSounds:
+    - {fileID: 8300000, guid: 9064dac268872fd48bf90e84554267ab, type: 3}
+    crawlSounds: []
+  stone:
+    walkSounds:
+    - {fileID: 8300000, guid: 1f0199a4c6005ec4abbb302f71bc036d, type: 3}
+    runSounds:
+    - {fileID: 8300000, guid: ecd647025e0a3c04fbd5829fff509e09, type: 3}
+    jumpTakeoffSounds:
+    - {fileID: 8300000, guid: 8420cf17e21d6354a98e6ef6d19dc9cc, type: 3}
+    jumpLandSounds:
+    - {fileID: 8300000, guid: 3d8f480d252db9449b2f978284506f8e, type: 3}
+    crawlSounds: []
+  wood:
+    walkSounds: []
+    runSounds: []
+    jumpTakeoffSounds: []
+    jumpLandSounds: []
+    crawlSounds: []
+  rayDistance: 1.5
+--- !u!82 &1372759257
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1372759249}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 6247101372657625324, guid: d4b9cc31e1a51d548aca6b247c1c0435, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.4
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 15
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1376383493
 GameObject:
   m_ObjectHideFlags: 0
@@ -27904,6 +28062,10 @@ PrefabInstance:
     - target: {fileID: 6588113581762439848, guid: 2caf1e27dea9af347a4438795f887095, type: 3}
       propertyPath: m_Name
       value: Ground_Cave_C (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6588113581762439848, guid: 2caf1e27dea9af347a4438795f887095, type: 3}
+      propertyPath: m_TagString
+      value: Stone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -37041,7 +37203,7 @@ GameObject:
   - component: {fileID: 5494838252468882373}
   m_Layer: 0
   m_Name: Mada'in Salih
-  m_TagString: Untagged
+  m_TagString: Sand
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

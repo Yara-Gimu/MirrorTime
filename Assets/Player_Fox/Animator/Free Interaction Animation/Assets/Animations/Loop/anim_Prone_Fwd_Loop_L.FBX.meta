@@ -24,7 +24,19 @@ ModelImporter:
     removeConstantScaleCurves: 1
     motionNodeName: 
     animationImportErrors: 
-    animationImportWarnings: 
+    animationImportWarnings: "\nClip 'Unreal Take' has import animation warnings
+      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'spine_01' has translation animation that
+      will be discarded.\n\t'spine_02' has translation animation that will be discarded.\n\t'spine_03'
+      has translation animation that will be discarded.\n\t'spine_03' is inbetween
+      humanoid transforms and has rotation animation that will be discarded.\n\t'spine_04'
+      has translation animation that will be discarded.\n\t'spine_05' has translation
+      animation that will be discarded.\n\t'spine_05' is inbetween humanoid transforms
+      and has rotation animation that will be discarded.\n\t'neck_01' has translation
+      animation that will be discarded.\n\t'clavicle_l' has translation animation
+      that will be discarded.\n\t'clavicle_r' has translation animation that will
+      be discarded.\n\t'thigh_r' has translation animation that will be discarded.\n\t'thigh_l'
+      has translation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -61,7 +73,28 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: PlayFootstepEvent
+        data: Crawl
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9436065
+        functionName: PlayFootstepEvent
+        data: Crawl
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.47278687
+        functionName: PlayFootstepEvent
+        data: Crawl
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

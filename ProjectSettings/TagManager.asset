@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - Obstacles
+  - Sand
+  - Stone
   layers:
   - Default
   - TransparentFX

@@ -14,7 +14,7 @@ public class DynamicInteractPrompt : MonoBehaviour
 
     [Header("--- إعدادات الظهور ---")]
     public float fadeSpeed = 5f; 
-    public float showDelay = 3.0f; 
+    public float showDelay = 4.0f; 
 
     private bool isPlayerNear = false;
     private float targetAlpha = 0f;
