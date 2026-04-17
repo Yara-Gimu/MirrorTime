@@ -13,27 +13,24 @@ public class CrouchCameraSwitcher : MonoBehaviour
     // متغير لحفظ حالة نوار (هل هي تزحف أو واقفة؟)
     private bool isCrouching = false;
 
-    void Update()
+void Update()
+{
+    if (Input.GetKeyDown(KeyCode.C))
     {
-        // التحقق من ضغط زر C 
-        // (إذا تستخدمين نظام الإدخال الجديد، تقدرين تربطينها به بدل GetKeyDown)
-        if (Input.GetKeyDown(KeyCode.C))
+        isCrouching = !isCrouching; 
+        
+        if (isCrouching)
         {
-            // عكس الحالة: إذا كانت واقفة تصير تزحف، والعكس
-            isCrouching = !isCrouching; 
-
-            if (isCrouching)
-            {
-                // وضع الزحف: نرفع أولوية كاميرا الزحف عشان تظهر للمشاهد
-                crouchCamera.Priority = 20;
-                mainCamera.Priority = 10;
-            }
-            else
-            {
-                // وضع الوقوف: نرجع الأولوية للكاميرا الأساسية
-                crouchCamera.Priority = 10;
-                mainCamera.Priority = 20;
-            }
+            crouchCamera.Priority = 50; // ارفعي الرقم لضمان الغلبة
+            mainCamera.Priority = 10;
+            Debug.Log("وضع الزحف: كاميرا الزحف مفعلة");
+        }
+        else
+        {
+            crouchCamera.Priority = 10;
+            mainCamera.Priority = 50; // نرفع الأساسية عشان تسحب الكاميرا لها
+            Debug.Log("وضع الوقوف: الكاميرا الأساسية مفعلة");
         }
     }
+}
 }
