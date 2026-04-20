@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class AAA_SinglePressMirror : MonoBehaviour
+public class SinglePressMirror : MonoBehaviour
 {
     [Header("--- عناصر البيئة والـ 3D UI ---")]
     [Tooltip("اسحبي مجسم الـ Sprite Renderer (صورة الزر) هنا")]

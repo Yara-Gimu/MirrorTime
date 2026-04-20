@@ -6,13 +6,16 @@ using System.Collections;
 
 public class ComicSequence : MonoBehaviour
 {
+    [Header("--- إعدادات حركة المراية السحرية ---")]
+    public FloatingObject mirrorToMove; 
+    public float moveDistance = 1.5f; 
+
     [Header("--- إعدادات الصوت والانتقال ---")]
     public AudioClip glassSmashSound; 
     private AudioSource audioSource;
     public string hubWorldSceneName = "The Hub World"; 
 
     [Header("--- نظام الإدخال للتخطي ---")]
-    [Tooltip("نفس الزر اللي استخدمتيه للكسر، هنا بنستخدمه للتخطي")]
     public InputActionReference skipOrBreakAction; 
 
     [Header("--- إعدادات واجهة الكوميكس (UI) ---")]
@@ -22,22 +25,27 @@ public class ComicSequence : MonoBehaviour
 
     [Header("--- الصور والتوقيت ---")]
     public Sprite[] comicFrames; 
-    public float flashSpeed = 0.5f; 
+    public float flashSpeed = 0.2f; 
     public float frameDuration = 2.5f; 
+    
+    [Header("--- توقيت الإخراج السينمائي ---")]
+    public float reachAnimationDelay = 0.8f; 
 
     private bool isBroken = false;
     private bool isSequenceRunning = false;
     private Coroutine sequenceCoroutine;
+    private RectTransform flashRectTransform;
 
     void Awake()
     {
-        // سحبنا مكون الصوت في Awake عشان يكون جاهز أول ما يتفعل الكانفاس
         audioSource = GetComponent<AudioSource>();
+        if (flashPanel != null) flashRectTransform = flashPanel.GetComponent<RectTransform>();
     }
 
     void Start()
     {
         if (flashPanel != null) flashPanel.canvasRenderer.SetAlpha(0f);
+        if (flashRectTransform != null) flashRectTransform.localScale = Vector3.zero;
         if (comicDisplay != null) comicDisplay.gameObject.SetActive(false);
         if (skipPromptText != null) skipPromptText.SetActive(false);
     }
@@ -57,23 +65,99 @@ public class ComicSequence : MonoBehaviour
             skipOrBreakAction.action.performed -= OnInputPressed;
     }
 
-    // 🌟 الدالة اللي راح تناديها المرآة (بوابة الدخول)
     public void StartSequenceFromMirror()
     {
         if (!isBroken)
         {
             isBroken = true;
-            DisablePlayer();
             sequenceCoroutine = StartCoroutine(PlayCinematicSequence());
         }
     }
 
-    // دالة لاستقبال زر التخطي
-    private void OnInputPressed(InputAction.CallbackContext context)
+    IEnumerator PlayCinematicSequence()
     {
-        if (isSequenceRunning)
+        isSequenceRunning = true;
+
+        // 🌟 1. السحر الجديد: نلف نوار عشان تطالع في المراية بنعومة!
+        StartCoroutine(SmoothRotatePlayerToMirror());
+
+        // 2. المراية تقرب
+        if (mirrorToMove != null) mirrorToMove.MoveMirrorForward(moveDistance, reachAnimationDelay);
+
+        // 3. ننتظر نوار تمد يدها وتلف
+        yield return new WaitForSeconds(reachAnimationDelay);
+
+        // 4. تجميد اللاعب
+        DisablePlayer();
+
+        // 5. الصوت والكسر
+        if (glassSmashSound != null && audioSource != null) audioSource.PlayOneShot(glassSmashSound);
+        if (skipPromptText != null) skipPromptText.SetActive(true);
+
+        // 6. الفلاش اللي يكبر
+        yield return StartCoroutine(PulseFlash(flashSpeed));
+
+        // 7. عرض الكوميكس
+        if (comicDisplay != null)
         {
-            SkipSequence();
+            comicDisplay.gameObject.SetActive(true);
+            foreach (var frame in comicFrames)
+            {
+                comicDisplay.sprite = frame;
+                yield return StartCoroutine(FadeImage(flashPanel, 0.5f, 0f, flashSpeed)); 
+                yield return new WaitForSeconds(frameDuration);
+            }
+        }
+
+        FinishSequence();
+    }
+
+    // ==========================================
+    // 🌟 دالة دوران نوار السينمائي
+    // ==========================================
+    IEnumerator SmoothRotatePlayerToMirror()
+    {
+        PlayerStateMachine player = FindFirstObjectByType<PlayerStateMachine>();
+        if (player == null || mirrorToMove == null) yield break;
+
+        Transform pTransform = player.transform;
+        
+        // نحسب الاتجاه للمراية (نقفل محور Y عشان نوار ما تطالع في الأرض أو السماء وتخرب وقفتها)
+        Vector3 directionToMirror = (mirrorToMove.transform.position - pTransform.position).normalized;
+        directionToMirror.y = 0f; 
+
+        if (directionToMirror != Vector3.zero)
+        {
+            // الدوران الهدف اللي نبغى نوصل له
+            Quaternion targetRotation = Quaternion.LookRotation(directionToMirror);
+            
+            float elapsed = 0f;
+            // نستخدم نفس وقت مدة اليد عشان الحركة تكون متزامنة 100%
+            float duration = reachAnimationDelay; 
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                // Slerp: دالة رياضية تلف المجسم بنعومة من زاويته الحالية للزاوية الهدف
+                pTransform.rotation = Quaternion.Slerp(pTransform.rotation, targetRotation, elapsed / duration);
+                yield return null;
+            }
+            
+            // تأكيد الوقفة الصحيحة في النهاية
+            pTransform.rotation = targetRotation; 
+        }
+    }
+
+    IEnumerator PulseFlash(float duration)
+    {
+        flashRectTransform.localScale = Vector3.zero;
+        flashPanel.canvasRenderer.SetAlpha(1f);
+        float time = 0;
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            flashRectTransform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one * 2f, time / duration);
+            yield return null;
         }
     }
 
@@ -83,67 +167,28 @@ public class ComicSequence : MonoBehaviour
         if (player != null) player.enabled = false;
     }
 
-    IEnumerator PlayCinematicSequence()
-    {
-        isSequenceRunning = true;
-
-        if (glassSmashSound != null && audioSource != null) audioSource.PlayOneShot(glassSmashSound);
-        if (skipPromptText != null) skipPromptText.SetActive(true);
-
-        if (flashPanel != null) yield return FadeImage(flashPanel, 0f, 1f, flashSpeed);
-
-        if (comicDisplay != null)
-        {
-            comicDisplay.gameObject.SetActive(true);
-            for (int i = 0; i < comicFrames.Length; i++)
-            {
-                comicDisplay.sprite = comicFrames[i];
-                
-                if (flashPanel != null)
-                {
-                    flashPanel.canvasRenderer.SetAlpha(1f);
-                    yield return FadeImage(flashPanel, 1f, 0f, flashSpeed / 2f);
-                }
-
-                yield return new WaitForSeconds(frameDuration);
-            }
-        }
-
-        if (flashPanel != null) yield return FadeImage(flashPanel, 0f, 1f, flashSpeed);
-
-        FinishSequence();
-    }
+    private void OnInputPressed(InputAction.CallbackContext context) => SkipSequence();
 
     void SkipSequence()
     {
         if (sequenceCoroutine != null) StopCoroutine(sequenceCoroutine);
-        if (flashPanel != null) flashPanel.canvasRenderer.SetAlpha(1f);
         FinishSequence();
     }
 
     void FinishSequence()
     {
         isSequenceRunning = false;
-
-        if (FadeManager.instance != null)
-            FadeManager.instance.LoadSceneSmoothly(hubWorldSceneName);
-        else
-            SceneManager.LoadScene(hubWorldSceneName);
+        SceneManager.LoadScene(hubWorldSceneName);
     }
 
     IEnumerator FadeImage(Image img, float startAlpha, float endAlpha, float duration)
     {
-        if (img == null) yield break;
-
         float time = 0;
-        img.canvasRenderer.SetAlpha(startAlpha);
-        
         while (time < duration)
         {
             time += Time.deltaTime;
             img.canvasRenderer.SetAlpha(Mathf.Lerp(startAlpha, endAlpha, time / duration));
             yield return null;
         }
-        img.canvasRenderer.SetAlpha(endAlpha);
     }
 }

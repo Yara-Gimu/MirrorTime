@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Unity.Cinemachine;
-using UnityEngine.Audio; // 🌟 ضروري للتحكم في الميكسر
+using UnityEngine.Audio;
 
 public class FallingTrap : MonoBehaviour
 {
@@ -21,12 +21,20 @@ public class FallingTrap : MonoBehaviour
     [Header("إعدادات السقوط")]
     [SerializeField] float gravityAcceleration = 15f; 
     
-    [Header("--- المؤثرات الصوتية والميكسر ---")]
+    [Header("--- المؤثرات الصوتية (البيئة والصخور) ---")]
     [SerializeField] ParticleSystem impactDust; 
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioMixer mixer; // 🌟 اسحبي الميكسر هنا
+    [Tooltip("هذي السماعة للصخور (خليها 3D ومكانها عند السقف)")]
+    [SerializeField] AudioSource environmentAudioSource; 
     
-    // 🌟 تم تعديل القيمة الافتراضية هنا لتطابق اسم الميكسر اللي سويناه
+    [Header("--- المؤثرات الصوتية (السينمائية والكحة) ---")]
+    [Tooltip("هذي السماعة للكحة (خليها 2D عشان تنسمع بوضوح)")]
+    [SerializeField] AudioSource cinematicAudioSource; 
+    [SerializeField] AudioClip coughSound; 
+    [Tooltip("كم ثانية تنتظر نورة بعد الكحة الأولى عشان تكح المرة الثانية؟")]
+    [SerializeField] float timeBetweenCoughs = 2.8f;
+
+    [Header("--- الميكسر ---")]
+    [SerializeField] AudioMixer mixer; 
     [SerializeField] string musicVolumeParam = "InsideVol"; 
 
     private bool hasFallen = false; 
@@ -43,7 +51,6 @@ public class FallingTrap : MonoBehaviour
                 StartCoroutine(DelayedCough(playerAnim, 0.7f));
             }
 
-            // 🌟 خفض الموسيقى بنعومة (AAA Ducking)
             StartCoroutine(AudioDuckingSequence());
 
             foreach (var rock in rocks)
@@ -53,18 +60,16 @@ public class FallingTrap : MonoBehaviour
         }
     }
 
-    // 🌟 نظام Ducking احترافي (AAA) ذو تدرج ناعم
     IEnumerator AudioDuckingSequence()
     {
-        float fadeOutTime = 0.2f; // 1. نزول سريع جداً مع الضربة
-        float holdTime = 2.5f;    // 2. بقاء الصوت منخفض أثناء غبار الصخور
-        float fadeInTime = 2.0f;  // 3. رجوع هادئ للموسيقى
+        float fadeOutTime = 0.2f; 
+        float holdTime = 2.5f;    
+        float fadeInTime = 2.0f;  
         
         float targetVolume = -20f;
         float originalVolume = 0f; 
         float timer = 0f;
 
-        // 1. خفض سريع للصوت (Fade Out)
         while(timer < fadeOutTime) 
         {
             timer += Time.deltaTime;
@@ -72,10 +77,8 @@ public class FallingTrap : MonoBehaviour
             yield return null;
         }
 
-        // 2. البقاء على الصوت المنخفض (Hold)
         yield return new WaitForSeconds(holdTime);
 
-        // 3. عودة الصوت الطبيعي بنعومة (Fade In)
         timer = 0f;
         while(timer < fadeInTime) 
         {
@@ -89,6 +92,23 @@ public class FallingTrap : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         anim.SetTrigger("Cough");
+
+        // 🌟 نستخدم السماعة السينمائية للكحة!
+        if (cinematicAudioSource != null && coughSound != null)
+        {
+            cinematicAudioSource.PlayOneShot(coughSound); 
+            StartCoroutine(PlaySecondCough(timeBetweenCoughs)); 
+        }
+    }
+
+    IEnumerator PlaySecondCough(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        // 🌟 نستخدم السماعة السينمائية للكحة الثانية!
+        if (cinematicAudioSource != null && coughSound != null)
+        {
+            cinematicAudioSource.PlayOneShot(coughSound);
+        }
     }
 
     IEnumerator FallToTarget(RockPiece rockPiece)
@@ -111,8 +131,9 @@ public class FallingTrap : MonoBehaviour
     {
         if (impactDust != null && !impactDust.isPlaying) impactDust.Play();
 
-        if (audioSource != null && soundToPlay != null)
-            audioSource.PlayOneShot(soundToPlay); 
+        // 🌟 نستخدم سماعة البيئة لصوت الصخور!
+        if (environmentAudioSource != null && soundToPlay != null)
+            environmentAudioSource.PlayOneShot(soundToPlay); 
         
         if (impulseToTrigger != null)
             impulseToTrigger.GenerateImpulseWithForce(1f); 

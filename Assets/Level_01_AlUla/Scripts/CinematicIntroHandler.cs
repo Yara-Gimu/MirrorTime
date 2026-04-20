@@ -5,27 +5,29 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class CinematicIntroHandler : MonoBehaviour
 {
-    [Header("توقيت الكاميرات السينمائية (ثواني)")]
-    [SerializeField] float timeToStartWalk = 5.5f; 
+    [Header("توقيت المشهد السينمائي")]
+    [SerializeField] float totalSceneDuration = 39f; 
     
-    [Header("إعدادات المشي التلقائي")]
+    [Header("توقيت المشي التلقائي")]
+    [SerializeField] float timeToStartWalk = 5.5f; 
     [SerializeField] float walkSpeed = 2.0f; 
     [SerializeField] float walkDuration = 4.0f; 
 
     [Header("السكربتات اللي نبغى نقفلها وقت المشهد")]
-    [Tooltip("اسحبي هنا PlayerStateMachine، وأي سكربت مسؤول عن الماوس أو لف الكاميرا")]
-    [SerializeField] Behaviour[] scriptsToLock; // 🌟 السر هنا لتقفيل كل شيء
+    [SerializeField] Behaviour[] scriptsToLock; 
 
     Animator animator;
     CharacterController characterController;
+    private bool isCinematicActive = false; // 🌟 لمعرفة إذا المشهد شغال
 
     void Start()
     {
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
 
-        // 1. تنويم كل السكربتات المسؤولة عن التحكم
+        // 1. قفل التحكم فوراً عند بداية اللعبة
         LockPlayerControls(true);
+        isCinematicActive = true;
 
         if (animator != null) 
         {
@@ -36,14 +38,28 @@ public class CinematicIntroHandler : MonoBehaviour
         StartCoroutine(StartCinematicSequence());
     }
 
+    // 🌟 السر هنا: جاذبية مستمرة طول المشهد عشان نوار ما تسبح في الهواء!
+    void Update()
+    {
+        if (isCinematicActive && characterController != null)
+        {
+            if (!characterController.isGrounded)
+            {
+                characterController.Move(new Vector3(0, -9.81f * Time.deltaTime, 0));
+            }
+        }
+    }
+
     IEnumerator StartCinematicSequence()
     {
+        float startTime = Time.time;
+
         yield return new WaitForSeconds(timeToStartWalk);
 
         if (animator != null) animator.SetFloat("Speed", 0.25f); 
 
-        float startTime = Time.time;
-        while (Time.time < startTime + walkDuration)
+        float walkStartTime = Time.time;
+        while (Time.time < walkStartTime + walkDuration)
         {
             if (characterController != null)
             {
@@ -56,19 +72,23 @@ public class CinematicIntroHandler : MonoBehaviour
 
         if (animator != null) animator.SetFloat("Speed", 0f); 
 
-        // 2. انتهى المشهد! نرجع نفتح كل السكربتات ونرجع التحكم
+        // ننتظر باقي الـ 39 ثانية
+        float timeRemaining = totalSceneDuration - (Time.time - startTime);
+        if (timeRemaining > 0)
+        {
+            yield return new WaitForSeconds(timeRemaining);
+        }
+
+        // 2. انتهى المشهد الكلي! نفتح التحكم
+        isCinematicActive = false;
         LockPlayerControls(false);
     }
 
-    // 🌟 دالة مساعدة تقفل وتفتح السكربتات بضغطة زر
     void LockPlayerControls(bool isLocked)
     {
         foreach (var script in scriptsToLock)
         {
-            if (script != null)
-            {
-                script.enabled = !isLocked; 
-            }
+            if (script != null) script.enabled = !isLocked; 
         }
     }
 }

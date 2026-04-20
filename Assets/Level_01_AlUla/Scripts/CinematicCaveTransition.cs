@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Audio; 
 
 public class CinematicCaveTransition : MonoBehaviour
 {
@@ -21,19 +20,22 @@ public class CinematicCaveTransition : MonoBehaviour
     public CanvasGroup blackScreen; 
     public ParticleSystem heavyDust; 
 
-    [Header("Audio Theatre & Mixer")]
+    [Header("Audio Theatre")]
     public AudioSource audioSource; 
-    public AudioClip rumbleSound;   
     public AudioClip crashSound;    
     public AudioClip coughSound;    
     
-    public AudioMixer mixer; 
-    public string musicVolumeParam = "InsideVol"; 
+    // 🌟 المتغير للتحكم بوقت الكحة الثانية
+    [Tooltip("كم ثانية تنتظر نورة بعد الكحة الأولى عشان تكح المرة الثانية؟")]
+    public float timeBetweenCoughs = 2.8f; 
 
     private bool hasTriggered = false; 
 
     private void OnTriggerEnter(Collider other)
     {
+        // هذا السطر بيعلمك في الكونسول مين اللي لمس التريجر بالضبط
+        Debug.Log("شيء لمسني واسمه: " + other.name + " وعنده تاغ: " + other.tag);
+        // التأكد أن اللاعب هو من دخل المنطقة ولم يتم تفعيل المشهد من قبل
         if (other.CompareTag("Player") && !hasTriggered)
         {
             hasTriggered = true; 
@@ -44,24 +46,22 @@ public class CinematicCaveTransition : MonoBehaviour
     IEnumerator CinematicSequence()
     {
         // ==========================================
-        // 1. لحظة الزلزال والإدراك
+        // 1. لحظة الزلزال والإدراك (تزامن مع التايم لاين)
         // ==========================================
-        if (rumbleSound != null) audioSource.PlayOneShot(rumbleSound);
-        yield return new WaitForSeconds(2f); 
+        
+        // ننتظر 3.5 ثانية (مدة اهتزاز الكاميرا في الـ Timeline + نص ثانية أمان)
+        yield return new WaitForSeconds(7f); 
 
         // ==========================================
         // 2. القطع للسواد (Smash Cut) والانهيار
         // ==========================================
-        // إظلام الشاشة فوراً
+        // إظلام الشاشة فوراً (Alpha = 1) لإخفاء عملية النقل
         if (blackScreen != null) blackScreen.alpha = 1f; 
         
-        // تشغيل صوت الحطام
+        // تشغيل صوت الانهيار القوي
         if (crashSound != null) audioSource.PlayOneShot(crashSound);
 
-        // تشغيل نظام خفض الموسيقى (Audio Ducking)
-        StartCoroutine(AudioDuckingSequence());
-
-        // إخفاء الأرضيات فوراً عشان تنفتح الفتحة فوق في السقف
+        // إخفاء الأرضيات/الصخور لفتح الفتحة في السقف
         foreach (GameObject piece in floorPieces)
         {
             if (piece != null) piece.SetActive(false);
@@ -71,6 +71,8 @@ public class CinematicCaveTransition : MonoBehaviour
         // 3. النقل (الترسبن) بالخفاء وراء الكواليس
         // ==========================================
         CharacterController cc = player.GetComponent<CharacterController>();
+        
+        // تعطيل الـ CharacterController مؤقتاً للسماح بنقل الموقع
         if (cc != null) cc.enabled = false;
 
         player.position = caveSpawnPoint.position;
@@ -78,68 +80,51 @@ public class CinematicCaveTransition : MonoBehaviour
 
         if (cc != null) cc.enabled = true;
 
-        // انتظار لسماع صدى الحطام في الظلام التام
+        // انتظار في الظلام التام لسماع صدى الحطام وإعطاء جو درامي
         yield return new WaitForSeconds(3f); 
 
         // ==========================================
         // 4. الإفاقة (الفتح التدريجي والأنيميشن)
         // ==========================================
         
-        // تشغيل الغبار الآن ليتزامن مع فتح الشاشة
+        // تشغيل تأثير الغبار ليتزامن مع فتح العين/الشاشة
         if (heavyDust != null) heavyDust.Play(); 
 
-        // تشغيل حركة الكحة أو الإفاقة باستخدام التريقر
+        // تفعيل أنيميشن الكحة أو الإفاقة
         if (playerAnimator != null && !string.IsNullOrEmpty(wakeupTriggerName))
         {
             playerAnimator.SetTrigger(wakeupTriggerName);
         }
 
-        // صوت الكحة
-        if (coughSound != null) audioSource.PlayOneShot(coughSound);
+        // تشغيل صوت الكحة المزدوجة
+        if (coughSound != null) 
+        {
+            audioSource.PlayOneShot(coughSound); // الكحة الأولى
+            StartCoroutine(PlaySecondCough(timeBetweenCoughs)); // الكحة الثانية بعد الانتظار
+        }
         
-        // تلاشي الشاشة السوداء ببطء
+        // تلاشي الشاشة السوداء ببطء (Fade Out) لإظهار الكهف الجديد
         float fadeDuration = 4f; 
         float timer = 0;
         
         while (timer < fadeDuration)
         {
             timer += Time.deltaTime;
-            if (blackScreen != null) blackScreen.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+            if (blackScreen != null) 
+                blackScreen.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
             yield return null;
         }
     }
 
     // ==========================================
-    // نظام خفض الموسيقى (Audio Ducking)
+    // دالة لتشغيل الكحة الثانية بناءً على الوقت المحدد
     // ==========================================
-    IEnumerator AudioDuckingSequence()
+    IEnumerator PlaySecondCough(float delay)
     {
-        float fadeOutTime = 0.2f; // نزول سريع جداً مع الضربة
-        float holdTime = 4.5f;    // البقاء منخفضاً طوال فترة السواد
-        float fadeInTime = 3.0f;  // رجوع هادئ للموسيقى مع فتح الشاشة
-
-        float targetVolume = -20f;
-        float originalVolume = 0f; 
-        float timer = 0f;
-
-        // 1. خفض سريع للصوت (Fade Out)
-        while(timer < fadeOutTime) 
+        yield return new WaitForSeconds(delay);
+        if (audioSource != null && coughSound != null)
         {
-            timer += Time.deltaTime;
-            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(originalVolume, targetVolume, timer / fadeOutTime));
-            yield return null;
-        }
-
-        // 2. البقاء على الصوت المنخفض (Hold)
-        yield return new WaitForSeconds(holdTime);
-
-        // 3. عودة الصوت الطبيعي بنعومة (Fade In)
-        timer = 0f;
-        while(timer < fadeInTime) 
-        {
-            timer += Time.deltaTime;
-            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(targetVolume, originalVolume, timer / fadeInTime));
-            yield return null;
+            audioSource.PlayOneShot(coughSound);
         }
     }
 }

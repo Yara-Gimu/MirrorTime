@@ -8,6 +8,7 @@ TagManager:
   - Obstacles
   - Sand
   - Stone
+  - Environment
   layers:
   - Default
   - TransparentFX
