@@ -9,6 +9,7 @@ TagManager:
   - Sand
   - Stone
   - Environment
+  - Grass
   layers:
   - Default
   - TransparentFX

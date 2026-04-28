@@ -7,20 +7,13 @@ using System.Collections.Generic;
 
 public class MainGateController : MonoBehaviour
 {
-    [Header("--- المجسمات ---")]
-    public Renderer mainGateRenderer;  
+    [Header("--- المجسمات والإضاءة ---")]
     public GameObject portalGlowObject; 
     public GameObject centerSpotLightObject; 
 
-    [Header("--- الماتيريال ---")]
-    public int rightMaterialIndex = 0; 
-    public int leftMaterialIndex = 1;  
-    public Material litMaterial;       
-    public Material unlitMaterial;     
-
-    [Header("--- منطق اللعبة (متى تفتح) ---")]
-    public int levelToLightRight = 2;       
-    public int levelToLightLeftAndOpen = 4; 
+    [Header("--- منطق اللعبة (متى تفتح البوابة النهائية) ---")]
+    [Tooltip("رقم المرحلة المطلوبة لفتح البوابة بالكامل")]
+    public int levelRequiredToOpen = 4; // خليتها متغير واحد يحدد متى تفتح نهائياً
 
     [Header("--- إعدادات الانتقال والتفاعل ---")]
     public string finalSceneName = "FinalEndingScene"; 
@@ -68,8 +61,8 @@ public class MainGateController : MonoBehaviour
     // 🧠 الدالة اللي تشتغل أول ما يوصل خبر إن نوار خلصت مرحلة
     private void OnLevelCompletedEvent(Dictionary<string, object> data)
     {
-        Debug.Log("🏛️ البوابة العملاقة تلقت إشارة بانتهاء مرحلة! يتم تحديث الإضاءة...");
-        CheckGateStatus(); // نحدث إضاءة الأعمدة فوراً
+        Debug.Log("🏛️ البوابة العملاقة تلقت إشارة بانتهاء مرحلة! يتم التحقق من حالة الفتح...");
+        CheckGateStatus(); 
     }
 
     public void CheckGateStatus()
@@ -84,22 +77,9 @@ public class MainGateController : MonoBehaviour
             currentProgress = PlayerPrefs.GetInt("GateProgress", 0);
         }
 
-        Material[] mats = mainGateRenderer.materials;
-
-        // العمود الأيمن
-        if (currentProgress >= levelToLightRight)
+        // التحقق النهائي: هل اللاعب وصل للمرحلة المطلوبة لفتح البوابة؟
+        if (currentProgress >= levelRequiredToOpen)
         {
-            if (mats.Length > rightMaterialIndex) mats[rightMaterialIndex] = litMaterial;
-        }
-        else
-        {
-            if (mats.Length > rightMaterialIndex) mats[rightMaterialIndex] = unlitMaterial;
-        }
-
-        // العمود الأيسر وفتح البوابة
-        if (currentProgress >= levelToLightLeftAndOpen)
-        {
-            if (mats.Length > leftMaterialIndex) mats[leftMaterialIndex] = litMaterial;
             if(portalGlowObject) portalGlowObject.SetActive(true);
             if(centerSpotLightObject) centerSpotLightObject.SetActive(true);
 
@@ -109,7 +89,6 @@ public class MainGateController : MonoBehaviour
         }
         else
         {
-            if (mats.Length > leftMaterialIndex) mats[leftMaterialIndex] = unlitMaterial;
             if(portalGlowObject) portalGlowObject.SetActive(false);
             if(centerSpotLightObject) centerSpotLightObject.SetActive(false);
 
@@ -117,8 +96,6 @@ public class MainGateController : MonoBehaviour
             
             if (ambientLoopSound != null) ambientLoopSound.Stop();
         }
-
-        mainGateRenderer.materials = mats;
     }
 
     private void OnTriggerEnter(Collider other)

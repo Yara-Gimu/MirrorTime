@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using System.Collections.Generic; // ⚠️ إضافة مهمة جداً لمدير الأحداث
+using System.Collections.Generic;
 
 public class GateController : MonoBehaviour
 {
@@ -14,19 +14,6 @@ public class GateController : MonoBehaviour
     [Header("--- المجسمات والإضاءة ---")]
     public GameObject spotLightObject;  
     public GameObject portalGlowObject; 
-
-    [Header("--- فكرة يوري: تبديل ماتيريال النقش فقط ---")]
-    [Tooltip("مجسم البوابة اللي عليه النقش")]
-    public MeshRenderer gateRenderer; 
-    
-    [Tooltip("رقم الماتيريال حق النقش في قائمة الإنسبكتور (غالباً 1 إذا الخشب 0)")]
-    public int patternMaterialIndex = 1; 
-    
-    [Tooltip("ماتيريال النقش وهو طافي (عادي)")]
-    public Material darkPatternMaterial; 
-    
-    [Tooltip("ماتيريال النقش وهو شغال (مضيء)")]
-    public Material glowingPatternMaterial; 
 
     [Header("--- إعدادات الانتقال ---")]
     public string sceneToLoad; 
@@ -95,17 +82,6 @@ public class GateController : MonoBehaviour
         if (spotLightObject != null) spotLightObject.SetActive(true);
         if (portalGlowObject != null) portalGlowObject.SetActive(true);
 
-        // 🌟 فكرتك: تغيير ماتيريال النقش إلى المضيء
-        if (gateRenderer != null && glowingPatternMaterial != null)
-        {
-            Material[] mats = gateRenderer.materials; // نسحب قائمة الماتيريالز
-            if (mats.Length > patternMaterialIndex)
-            {
-                mats[patternMaterialIndex] = glowingPatternMaterial; // نغير النقش بس
-                gateRenderer.materials = mats; // نرجع القائمة للمجسم
-            }
-        }
-
         if (ambientLoopSound != null && !ambientLoopSound.isPlaying) ambientLoopSound.Play();
     }
 
@@ -115,17 +91,6 @@ public class GateController : MonoBehaviour
 
         if (spotLightObject != null) spotLightObject.SetActive(false);
         if (portalGlowObject != null) portalGlowObject.SetActive(false);
-
-        // 🌟 فكرتك: تغيير ماتيريال النقش إلى الطافي
-        if (gateRenderer != null && darkPatternMaterial != null)
-        {
-            Material[] mats = gateRenderer.materials; 
-            if (mats.Length > patternMaterialIndex)
-            {
-                mats[patternMaterialIndex] = darkPatternMaterial; 
-                gateRenderer.materials = mats; 
-            }
-        }
 
         if (ambientLoopSound != null) ambientLoopSound.Stop();
     }

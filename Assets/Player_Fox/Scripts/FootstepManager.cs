@@ -12,8 +12,8 @@ public class FootstepArchitecture : MonoBehaviour
         public AudioClip[] jumpLandSounds; 
         public AudioClip[] crawlSounds; 
         
-        [Header("--- مؤثرات الغبار (VFX) ---")]
-        [Tooltip("اسحبي مجسم الغبار الخاص بهذي الأرضية هنا")]
+        [Header("--- مؤثرات الغبار/التطاير (VFX) ---")]
+        [Tooltip("اسحبي مجسم الـ VFX الخاص بهذي الأرضية هنا")]
         public ParticleSystem dustVFXPrefab; 
     }
 
@@ -21,6 +21,7 @@ public class FootstepArchitecture : MonoBehaviour
     public SurfaceAudio sand;
     public SurfaceAudio stone;
     public SurfaceAudio wood;
+    public SurfaceAudio grass; // تم إضافة العشب هنا
 
     [Header("--- إعدادات الاستشعار (Raycast) ---")]
     public float rayDistance = 1.5f; 
@@ -47,12 +48,13 @@ public class FootstepArchitecture : MonoBehaviour
             {
                 case "Stone": currentSurface = stone; break;
                 case "Wood":  currentSurface = wood; break;
+                case "Grass": currentSurface = grass; break; // تم إضافة حالة العشب هنا
                 case "Sand": 
                 default:      currentSurface = sand; break;
             }
 
             // ==========================================
-            // 1. نظام تشغيل الصوت (كودك الأصلي الممتاز)
+            // 1. نظام تشغيل الصوت 
             // ==========================================
             AudioClip[] selectedSounds = null;
             switch (action)
@@ -80,23 +82,23 @@ public class FootstepArchitecture : MonoBehaviour
             }
 
             // ==========================================
-            // 2. نظام تشغيل الغبار (VFX) - AAA Style
+            // 2. نظام تشغيل الغبار/التطاير (VFX) - AAA Style
             // ==========================================
             if (currentSurface.dustVFXPrefab != null)
             {
-                // نحدد نسبة ظهور الغبار حسب الحركة
+                // نحدد نسبة ظهور التأثير حسب الحركة
                 float spawnChance = 0f;
                 if (action == "Run" || action == "JumpLand") spawnChance = 1.0f; // 100% مع الركض والقفز
                 else if (action == "Walk") spawnChance = 0.4f; // 40% مع المشي
                 else if (action == "Crawl") spawnChance = 0.1f; // 10% مع الزحف
                 
-                // إذا رمينا النرد وطلع الرقم ضمن النسبة المسموحة، نطلع الغبار!
+                // إذا رمينا النرد وطلع الرقم ضمن النسبة المسموحة، نطلع التأثير!
                 if (Random.value <= spawnChance)
                 {
-                    // ننسخ الغبار في نقطة الاصطدام بالضبط، ونخليه يطالع لفوق حسب ميلان الأرض
+                    // ننسخ الـ VFX في نقطة الاصطدام بالضبط، ونخليه يطالع لفوق حسب ميلان الأرض
                     ParticleSystem spawnedDust = Instantiate(currentSurface.dustVFXPrefab, hit.point, Quaternion.LookRotation(hit.normal));
                     
-                    // نمسح مجسم الغبار من اللعبة بعد ثانيتين عشان ما نستهلك الذاكرة
+                    // نمسح مجسم التأثير من اللعبة بعد ثانيتين عشان ما نستهلك الذاكرة
                     Destroy(spawnedDust.gameObject, 2f); 
                 }
             }

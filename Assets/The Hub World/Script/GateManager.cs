@@ -2,19 +2,12 @@ using UnityEngine;
 
 public class GateManager : MonoBehaviour
 {
-    [Header("--- Bawabats (Side Gates) ---")]
+    [Header("--- البوابات الجانبية (Side Gates) ---")]
     public GateController[] sideGates; 
 
-    [Header("--- Main Gate Visuals ---")]
-    public Renderer mainGateRenderer;    
-    public GameObject mainGatePortalObj; 
-
-    [Header("--- Material Settings ---")]
-    public Material litMaterial;   
-    public Material unlitMaterial; 
-    
-    public int rightMaterialIndex = 0; 
-    public int leftMaterialIndex = 1;  
+    [Header("--- البوابة الرئيسية (Main Gate) ---")]
+    [Tooltip("اسحبي مجسم البوابة الرئيسية اللي عليه سكريبت MainGateController هنا")]
+    public MainGateController mainGate; // استبدلنا كل الماتيريال بمرجع واحد نظيف
 
     void Start()
     {
@@ -23,9 +16,10 @@ public class GateManager : MonoBehaviour
 
     public void UpdateGatesState()
     {
-        // 🏗️ الترقية المعمارية: القراءة من المدير المركزي بدلاً من PlayerPrefs
+        // 🏗️ الترقية المعمارية: القراءة من المدير المركزي
         int progress = SaveManager.Instance != null ? SaveManager.Instance.currentGateProgress : 0;
 
+        // 1. تحديث البوابات الجانبية
         for (int i = 0; i < sideGates.Length; i++)
         {
             if (sideGates[i] != null)
@@ -34,34 +28,11 @@ public class GateManager : MonoBehaviour
             }
         }
 
-        UpdateMainGateMaterials(progress);
-    }
-
-    void UpdateMainGateMaterials(int progress)
-    {
-        Material[] mats = mainGateRenderer.materials;
-
-        if (progress >= 2) 
+        // 2. تحديث البوابة الرئيسية (تعتمد على الكود النظيف اللي سويناه لها)
+        if (mainGate != null)
         {
-            if (mats.Length > rightMaterialIndex) mats[rightMaterialIndex] = litMaterial;
+            mainGate.CheckGateStatus();
         }
-        else 
-        {
-            if (mats.Length > rightMaterialIndex) mats[rightMaterialIndex] = unlitMaterial;
-        }
-
-        if (progress >= 4)
-        {
-            if (mats.Length > leftMaterialIndex) mats[leftMaterialIndex] = litMaterial;
-            if (mainGatePortalObj) mainGatePortalObj.SetActive(true);
-        }
-        else
-        {
-            if (mats.Length > leftMaterialIndex) mats[leftMaterialIndex] = unlitMaterial;
-            if (mainGatePortalObj) mainGatePortalObj.SetActive(false);
-        }
-
-        mainGateRenderer.materials = mats;
     }
 
     // تم التعديل لتعتمد على SaveManager
