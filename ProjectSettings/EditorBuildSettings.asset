@@ -6,28 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Main Menu/Main Menu.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_00_MainMenu/Scenes/MainMenu.unity
     guid: ee58cacd5e53ead47812ffbbae6a3d3a
   - enabled: 1
-    path: Assets/Level_01_AlUla/Level_01_AlUla.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_01_Prologue/Scenes/Prologue_Scene.unity
     guid: acd485db95b77474c99434fcd994bab1
   - enabled: 1
-    path: Assets/The Hub World/Scenes/The Hub World.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_02_HubWorld/Scenes/The Hub
+      World.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/AlUla/Scene/AlUla.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_03_AlUla/Scenes/AlUla.unity
     guid: 1b36686adc88a5e4e84a3fa247ae27b1
   - enabled: 1
-    path: Assets/Thaj/Thaj.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_04_Thaj/Thaj.unity
     guid: e7b93c54b89aa194d8366b33a504926c
   - enabled: 1
-    path: Assets/AlFaw/AlFaw.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_05_AlFaw/Scenes/AlFaw.unity
     guid: 8b518defa9b426b4f8a8169073eb6819
   - enabled: 1
-    path: Assets/Taroot/Taroot.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_06_Taroot/Scenes/Taroot.unity
     guid: c19d0eb88ce6ac54a83838b1eb04400d
   - enabled: 1
-    path: Assets/Final/Final.unity
+    path: Assets/_MirrorsOfTime/02_Levels_Content/Level_07_Epilogue/Scenes/Final.unity
     guid: b2f032fef38306d46ad0c8cff78fed7e
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 131b3e01862a164478bfbe487f16fb01, type: 2}

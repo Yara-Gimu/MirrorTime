@@ -2,8 +2,8 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="LocalizationPackageExtensions.csproj" />
   <Project Path="RTLTMPro.csproj" />
-  <Project Path="RTLTMPro-Tests.csproj" />
-  <Project Path="RTLTMPro-Editor.csproj" />
   <Project Path="LocalizationPackageExtensions.Editor.csproj" />
+  <Project Path="RTLTMPro-Editor.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="RTLTMPro-Tests.csproj" />
 </Solution>
