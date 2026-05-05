@@ -3,31 +3,30 @@ using Unity.Cinemachine;
 
 public class MirrorCameraController : MonoBehaviour
 {
-    [Header("--- إعدادات كاميرا المراية ---")]
-    [Tooltip("اسحبي كاميرا السينماشين الخاصة بالمراية هنا")]
+    [Header("--- إعدادات كاميرا الاقتراب ---")]
+    [Tooltip("كاميرا السينماشين اللي تقرب لما نوار تدخل منطقة المرآة")]
     public CinemachineCamera interactionCamera;
 
-    [Tooltip("الرقم العالي اللي يخلي الكاميرا تفوز (مثلاً 100 عشان تغطي على الزحف)")]
+    [Tooltip("رقم الأولوية لما نوار تكون عند المرآة (مثلاً 100)")]
     public int activePriority = 100;
 
-    [Tooltip("الرقم الضعيف وقت ما تكون نوار بعيدة")]
+    [Tooltip("رقم الأولوية لما نوار تبعد (مثلاً 5)")]
     public int idlePriority = 5;
 
-    // 🌟 1. أول ما تدخل نوار المنطقة (التريجر)، الكاميرا تشتغل فوراً!
+    // 🌟 أول ما تدخل نوار المنطقة، الكاميرا تقرب وتستعد
     private void OnTriggerEnter(Collider other)
     {
-        // نتأكد إن اللي دخل هو اللاعب مو أي شيء ثاني
         if (other.CompareTag("Player"))
         {
             if (interactionCamera != null)
             {
                 interactionCamera.Priority = activePriority;
-                Debug.Log("🎥 نوار دخلت المنطقة: الكاميرا استعدت للقطة!");
+                Debug.Log("🎥 نوار دخلت المنطقة: كاميرا التفاعل اشتغلت!");
             }
         }
     }
 
-    // 🌟 2. لو نوار غيرت رأيها ومشت بعيد بدون ما تضغط E، ترجع الكاميرا طبيعية
+    // 🌟 لو نوار مشت بعيد بدون ما تضغط E، ترجع الكاميرا طبيعية
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))

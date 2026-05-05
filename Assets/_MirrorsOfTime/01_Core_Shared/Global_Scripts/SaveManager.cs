@@ -8,6 +8,9 @@ public class SaveManager : MonoBehaviour
     [Header("--- بيانات اللاعب الحالية ---")]
     public int currentGateProgress = 0; // 0=العلا، 1=ثاج، 2=الفاو، 3=تاروت
     public bool hasPlayedBefore = false;
+    
+    // 🎬 المتغير الجديد لتتبع المشهد السينمائي في غرفة البوابات
+    public bool hasSeenHubIntro = false; 
 
     void Awake()
     {
@@ -30,6 +33,10 @@ public class SaveManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("GateProgress", currentGateProgress);
         PlayerPrefs.SetInt("HasPlayedBefore", hasPlayedBefore ? 1 : 0);
+        
+        // 💾 حفظ حالة المشهد السينمائي
+        PlayerPrefs.SetInt("HasSeenHubIntro", hasSeenHubIntro ? 1 : 0); 
+        
         PlayerPrefs.Save();
         
         Debug.Log("💾 [SaveManager] تم حفظ تقدم نوار بنجاح!");
@@ -39,6 +46,9 @@ public class SaveManager : MonoBehaviour
     {
         currentGateProgress = PlayerPrefs.GetInt("GateProgress", 0);
         hasPlayedBefore = PlayerPrefs.GetInt("HasPlayedBefore", 0) == 1;
+        
+        // 📂 قراءة حالة المشهد السينمائي
+        hasSeenHubIntro = PlayerPrefs.GetInt("HasSeenHubIntro", 0) == 1; 
         
         Debug.Log("📂 [SaveManager] تم تحميل ملف اللعبة. المرحلة الحالية: " + currentGateProgress);
     }
@@ -54,6 +64,10 @@ public class SaveManager : MonoBehaviour
     {
         currentGateProgress = 0;
         hasPlayedBefore = true;
+        
+        // 🔄 إعادة تعيين المشهد السينمائي ليعمل مرة أخرى في اللعبة الجديدة
+        hasSeenHubIntro = false; 
+        
         SaveGame();
         
         Debug.Log("✨ [SaveManager] تم تصفير البيانات وبدء رحلة جديدة!");

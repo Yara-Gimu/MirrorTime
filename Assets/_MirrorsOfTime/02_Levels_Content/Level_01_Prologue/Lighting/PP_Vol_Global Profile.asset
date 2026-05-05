@@ -15,7 +15,7 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.3
+    m_Value: 0
   contrast:
     m_OverrideState: 1
     m_Value: 15
@@ -45,14 +45,14 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   threshold:
-    m_OverrideState: 0
-    m_Value: 0.9
+    m_OverrideState: 1
+    m_Value: 1.2
   intensity:
     m_OverrideState: 1
-    m_Value: 0.8
+    m_Value: 0.6
   scatter:
     m_OverrideState: 1
-    m_Value: 0.6
+    m_Value: 0.3
   clamp:
     m_OverrideState: 0
     m_Value: 65472
@@ -94,6 +94,7 @@ MonoBehaviour:
   - {fileID: -6082295337010121664}
   - {fileID: 3611750288299083651}
   - {fileID: -4168193760923062636}
+  - {fileID: 0}
 --- !u!114 &3611750288299083651
 MonoBehaviour:
   m_ObjectHideFlags: 3

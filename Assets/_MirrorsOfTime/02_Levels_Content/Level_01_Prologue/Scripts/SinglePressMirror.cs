@@ -7,8 +7,8 @@ public class SinglePressMirror : MonoBehaviour
     [Tooltip("اسحبي مجسم الـ Sprite Renderer (صورة الزر) هنا")]
     public SpriteRenderer iconSprite;
     
-    [Tooltip("مجسم الكانفاس حق الكوميكس اللي تبينه يظهر في النهاية")]
-    public GameObject comicCanvas;
+    [Tooltip("مجسم الـ GameObject اللي عليه سكربت MirrorCinematicSequence")]
+    public GameObject cinematicManager; // تم تغيير الاسم هنا ليكون أكثر منطقية
 
     [Header("--- أيقونات الأجهزة ---")]
     public Sprite kbIcon;   // حرف E
@@ -110,19 +110,20 @@ public class SinglePressMirror : MonoBehaviour
         // إخفاء الأيقونة فوراً
         if (iconSprite != null) iconSprite.enabled = false;
 
-        // 🌟 السحر هنا: نفعّل الكانفاس ونأمر الكوميكس يشتغل فوراً
-        if (comicCanvas != null)
+        // 🌟 السحر هنا: نأمر المشهد السينمائي بالبدء
+        if (cinematicManager != null)
         {
-            comicCanvas.SetActive(true);
+            cinematicManager.SetActive(true);
 
-            ComicSequence comicScript = comicCanvas.GetComponent<ComicSequence>();
-            if (comicScript != null)
+            // استدعاء السكربت باسمه الجديد
+            MirrorCinematicSequence cinematicScript = cinematicManager.GetComponent<MirrorCinematicSequence>();
+            if (cinematicScript != null)
             {
-                comicScript.StartSequenceFromMirror(); // أمر البدء المباشر
+                cinematicScript.StartSequenceFromMirror(); // أمر البدء المباشر
             }
             else
             {
-                Debug.LogError("⚠️ تأكدي إن سكربت ComicSequence محطوط على الكانفاس!");
+                Debug.LogError("⚠️ تأكدي إن سكربت MirrorCinematicSequence موجود على مجسم الـ cinematicManager!");
             }
         }
 

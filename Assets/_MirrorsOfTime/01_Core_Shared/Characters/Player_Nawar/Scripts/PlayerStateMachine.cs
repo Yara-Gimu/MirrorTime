@@ -54,7 +54,8 @@ public class PlayerStateMachine : MonoBehaviour
         originalHeight = Controller.height;
         originalCenter = Controller.center;
 
-        SwitchState(new PlayerIdleState(this));
+        // التعديل السحري: نوار تبدأ اللعبة في حالة "المشهد السينمائي" مسلوبة الإرادة
+        SwitchState(new PlayerCutsceneState(this));
     }
 
     void Update()
@@ -97,6 +98,13 @@ public class PlayerStateMachine : MonoBehaviour
         currentState.EnterState();
     }
 
+    // --- دالة إنهاء المشهد السينمائي (تستدعى من التايم لاين) ---
+    public void EndCutscene()
+    {
+        // نرجع التحكم للاعب بمجرد انتهاء الكات سين
+        SwitchState(new PlayerIdleState(this));
+    }
+
     // --- استقبال المدخلات (Input System) ---
     public void OnMove(InputValue value)
     {
@@ -122,7 +130,7 @@ public class PlayerStateMachine : MonoBehaviour
     }
 
     public void OnProne(InputValue value)
-    {
+    {        
         if (value.isPressed)
         {
             IsPronePressed = !IsPronePressed; // ضغطة للنزول وضغطة للنهوض
