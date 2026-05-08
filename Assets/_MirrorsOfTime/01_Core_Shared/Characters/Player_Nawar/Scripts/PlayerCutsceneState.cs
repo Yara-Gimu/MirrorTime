@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Playables; 
 
 public class PlayerCutsceneState : PlayerBaseState
 {
@@ -6,20 +7,32 @@ public class PlayerCutsceneState : PlayerBaseState
 
     public override void EnterState()
     {
-        // أول ما يبدأ المشهد، نصفر سرعة نوار عشان ما تتزحلق
+        // تصفير السرعة أول ما يبدأ المشهد
         if (ctx.animator != null) ctx.animator.SetFloat("Speed", 0f);
     }
 
     public override void UpdateState()
     {
-        // نترك هذي الدالة فاضية عن قصد!
-        // ما فيه جاذبية، ما فيه حركة، ما فيه استجابة للأزرار.
-        // التايم لاين هو اللي بيتحكم بحركة نوار بالكامل في هذي اللحظات.
+        // 1. تطبيق الجاذبية عشان نوار ما تسبح في الهواء!
+        if (ctx.Controller != null && !ctx.Controller.isGrounded)
+        {
+            ctx.Controller.Move(new Vector3(0, ctx.gravity * Time.deltaTime, 0));
+        }
+
+        // 2. نراقب التايم لاين
+        if (ctx.director != null)
+        {
+            // إذا التايم لاين خلص لعبه ووقف
+            if (ctx.director.state != PlayState.Playing)
+            {
+                // ✨ الحل هنا: نطلب من الـ Context (نظامك الأساسي) ينهي المشهد باستخدام دالتك!
+                ctx.EndCutscene(); 
+            }
+        }
     }
 
     public override void ExitState()
     {
-        // لما يخلص التايم لاين وتطلع من هذي الحالة، ما نحتاج نسوي شيء 
-        // لأنها بتنتقل تلقائياً لحالة الوقوف (Idle)
+        Debug.Log("انتهى العرض السينمائي، نوار جاهزة للعب!");
     }
 }

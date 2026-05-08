@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables; // 🌟 تمت إضافة هذي المكتبة الخاصة بالتايم لاين
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerStateMachine : MonoBehaviour
@@ -19,6 +20,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float coyoteTimeCounter;
 
     [Header("--- المراجع ---")]
+    public PlayableDirector director; // 🌟 تمت إضافة متغير التايم لاين هنا
     public Transform mainCamera;
     public Animator animator;
     public CharacterController Controller { get; private set; }
