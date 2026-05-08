@@ -151,6 +151,10 @@ MonoBehaviour:
     m_Key: UI_TAB_ACCESS
     m_Metadata:
       m_Items: []
+  - m_Id: 52679577936449536
+    m_Key: System_ComingSoon_Gate
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

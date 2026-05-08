@@ -154,6 +154,13 @@ MonoBehaviour:
     m_Localized: Barrierefreiheit
     m_Metadata:
       m_Items: []
+  - m_Id: 52679577936449536
+    m_Localized: "\u201EDer Sand der Zeit hat sich noch nicht gelegt...\u201C\n\nDas
+      AlUla-Tor sammelt seine Energie. Diese Region befindet sich in der temporalen
+      Restauration und wird in der Vollversion des Spiels verf\xFCgbar sein.\n\nDanke,
+      dass du diese fr\xFChe Version gespielt hast!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

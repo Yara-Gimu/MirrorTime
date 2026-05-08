@@ -154,6 +154,13 @@ MonoBehaviour:
     m_Localized: "Accessibilit\xE9"
     m_Metadata:
       m_Items: []
+  - m_Id: 52679577936449536
+    m_Localized: "\xAB Les sables du temps ne se sont pas encore pos\xE9s... \xBB\n\nLa
+      porte d'AlUla rassemble son \xE9nergie. Cette r\xE9gion est en cours de restauration
+      temporelle et sera disponible dans la version compl\xE8te du jeu.\n\nMerci
+      d'avoir jou\xE9 \xE0 cette version pr\xE9liminaire !"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

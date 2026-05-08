@@ -154,6 +154,19 @@ MonoBehaviour:
     m_Localized: Accessibility
     m_Metadata:
       m_Items: []
+  - m_Id: 52679577936449536
+    m_Localized: '"The sands of time have not yet settled..."
+
+
+      The AlUla Gate
+      is gathering its energy. This region is under temporal restoration and will
+      be available in the full release of the game.
+
+
+      Thank you for experiencing
+      this early build!'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
