@@ -5,29 +5,21 @@ using System.Collections;
 [RequireComponent(typeof(CharacterController))]
 public class CinematicIntroHandler : MonoBehaviour
 {
-    [Header("توقيت المشهد السينمائي")]
-    [SerializeField] float totalSceneDuration = 39f; 
-    
     [Header("توقيت المشي التلقائي")]
     [SerializeField] float timeToStartWalk = 5.5f; 
     [SerializeField] float walkSpeed = 2.0f; 
     [SerializeField] float walkDuration = 4.0f; 
 
-    [Header("السكربتات اللي نبغى نقفلها وقت المشهد")]
-    [SerializeField] Behaviour[] scriptsToLock; 
-
     Animator animator;
     CharacterController characterController;
-    private bool isCinematicActive = false; // 🌟 لمعرفة إذا المشهد شغال
+    private bool isWalkingSequenceActive = false; // للتحكم بالجاذبية الخاصة بهذا السكربت
 
     void Start()
     {
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
 
-        // 1. قفل التحكم فوراً عند بداية اللعبة
-        LockPlayerControls(true);
-        isCinematicActive = true;
+        isWalkingSequenceActive = true;
 
         if (animator != null) 
         {
@@ -35,13 +27,13 @@ public class CinematicIntroHandler : MonoBehaviour
             animator.SetBool("IsGrounded", true); 
         }
 
-        StartCoroutine(StartCinematicSequence());
+        StartCoroutine(StartWalkSequence());
     }
 
-    // 🌟 السر هنا: جاذبية مستمرة طول المشهد عشان نوار ما تسبح في الهواء!
+    // تطبيق الجاذبية فقط خلال فترة تدخل هذا السكربت
     void Update()
     {
-        if (isCinematicActive && characterController != null)
+        if (isWalkingSequenceActive && characterController != null)
         {
             if (!characterController.isGrounded)
             {
@@ -50,45 +42,31 @@ public class CinematicIntroHandler : MonoBehaviour
         }
     }
 
-    IEnumerator StartCinematicSequence()
+    IEnumerator StartWalkSequence()
     {
-        float startTime = Time.time;
-
+        // 1. انتظار الوقت المحدد قبل بداية المشي
         yield return new WaitForSeconds(timeToStartWalk);
 
+        // 2. تشغيل أنيميشن المشي
         if (animator != null) animator.SetFloat("Speed", 0.25f); 
 
+        // 3. تحريك اللاعب للأمام
         float walkStartTime = Time.time;
         while (Time.time < walkStartTime + walkDuration)
         {
             if (characterController != null)
             {
                 Vector3 moveDir = transform.forward * walkSpeed;
-                moveDir.y = -9.81f; 
+                moveDir.y = -9.81f; // دمج الجاذبية مع الحركة
                 characterController.Move(moveDir * Time.deltaTime); 
             }
             yield return null; 
         }
 
+        // 4. إيقاف اللاعب بعد انتهاء وقت المشي
         if (animator != null) animator.SetFloat("Speed", 0f); 
-
-        // ننتظر باقي الـ 39 ثانية
-        float timeRemaining = totalSceneDuration - (Time.time - startTime);
-        if (timeRemaining > 0)
-        {
-            yield return new WaitForSeconds(timeRemaining);
-        }
-
-        // 2. انتهى المشهد الكلي! نفتح التحكم
-        isCinematicActive = false;
-        LockPlayerControls(false);
-    }
-
-    void LockPlayerControls(bool isLocked)
-    {
-        foreach (var script in scriptsToLock)
-        {
-            if (script != null) script.enabled = !isLocked; 
-        }
+        
+        // إيقاف عمل التحديث الخاص بالجاذبية في هذا السكربت ليسلم المهمة لسكربت الحركة الأساسي
+        isWalkingSequenceActive = false; 
     }
 }
