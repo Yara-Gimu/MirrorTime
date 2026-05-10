@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: SubtitlesTable_de
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: de
+  m_SharedData: {fileID: 11400000, guid: e0d730566caf14b4fb9298c4121a9d74, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 477120024576
+    m_Localized: "Ich h\xE4tte nie gedacht, dass meine Reise nach Mada'in Saleh...
+      mich hierher f\xFChren w\xFCrde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 580698361856
+    m_Localized: "Alle Gr\xE4ber waren leer."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 616366723072
+    m_Localized: "...au\xDFer diesem hier."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 636637794304
+    m_Localized: Aber... etwas hat dort auf mich gewartet.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 667696615424
+    m_Localized: Und nun...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 689460858880
+    m_Localized: ...bin ich hier gefangen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 724982419456
+    m_Localized: Wer... hat das Siegel erweckt?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 744246857728
+    m_Localized: ...Wer bist du?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 767114203136
+    m_Localized: Man nennt mich... Wahaj.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 786496081920
+    m_Localized: "...W\xE4chterin des Spiegels."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 805114597376
+    m_Localized: "...Ich sehe, es hat dich auserw\xE4hlt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 827671564288
+    m_Localized: Eines der Tore ist erwacht... lass uns gehen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9435209650176
+    m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

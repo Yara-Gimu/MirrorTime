@@ -20,6 +20,12 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e0d730566caf14b4fb9298c4121a9d74
+    m_Address: Assets/_MirrorsOfTime/01_Core_Shared/Data_Localization/New Folder/SubtitlesTable
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 3217f5764b73175488187f460847bab4, type: 2}
   m_SchemaSet:

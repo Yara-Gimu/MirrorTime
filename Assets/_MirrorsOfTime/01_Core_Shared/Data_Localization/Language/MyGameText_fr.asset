@@ -161,6 +161,10 @@ MonoBehaviour:
       d'avoir jou\xE9 \xE0 cette version pr\xE9liminaire !"
     m_Metadata:
       m_Items: []
+  - m_Id: 53475782798987264
+    m_Localized: Afficher les sous-titres
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

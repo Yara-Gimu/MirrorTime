@@ -168,6 +168,10 @@ MonoBehaviour:
       \uFEDA\uFEBF\uFEEE\uFEA8\uFEDF \u064B\u0627\uFEAE\uFEDC\uFEB7"
     m_Metadata:
       m_Items: []
+  - m_Id: 53475782798987264
+    m_Localized: "\uFE94\uFEE4\uFE9F\uFEAE\uFE98\uFEDF\u0627 \u0631\uFE8E\uFEEC\uFEC7\u0625"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
