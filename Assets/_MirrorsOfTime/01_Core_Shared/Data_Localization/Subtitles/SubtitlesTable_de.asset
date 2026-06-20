@@ -18,29 +18,29 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 477120024576
-    m_Localized: "Ich h\xE4tte nie gedacht, dass meine Reise nach Mada'in Saleh...
-      mich hierher f\xFChren w\xFCrde."
+  - m_Id: 6742177569951744
+    m_Localized: ...Es war eine Karte.
     m_Metadata:
       m_Items: []
-  - m_Id: 580698361856
-    m_Localized: "Alle Gr\xE4ber waren leer."
+  - m_Id: 6742172834582528
+    m_Localized: Diese Orte erinnern sich noch... und das Manuskript war kein Mythos.
     m_Metadata:
       m_Items: []
-  - m_Id: 616366723072
-    m_Localized: "...au\xDFer diesem hier."
+  - m_Id: 6742149170319360
+    m_Localized: ...Aber die Akademie lag falsch.
     m_Metadata:
       m_Items: []
-  - m_Id: 636637794304
-    m_Localized: Aber... etwas hat dort auf mich gewartet.
+  - m_Id: 6742115204845568
+    m_Localized: Und das Manuskript sei nur ein Mythos.
     m_Metadata:
       m_Items: []
-  - m_Id: 667696615424
-    m_Localized: Und nun...
+  - m_Id: 6742080794775552
+    m_Localized: "Hier spricht Nawar... Jahrelang wurde mir als Arch\xE4ologin gesagt,
+      diese Orte seien nur tote Ruinen..."
     m_Metadata:
       m_Items: []
-  - m_Id: 689460858880
-    m_Localized: ...bin ich hier gefangen.
+  - m_Id: 6742053976395776
+    m_Localized: Audiolog... Tag drei.
     m_Metadata:
       m_Items: []
   - m_Id: 724982419456
@@ -69,6 +69,143 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 9435209650176
     m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688499558993920
+    m_Localized: "Von unten nach oben geschrieben... 'Von Nata'. Als w\xE4re er in
+      Eile hier durchgekommen, wollte aber nicht ohne eine Spur gehen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688884822593536
+    m_Localized: Sabig bin Kharba... Er wollte offensichtlich, dass sein Name hier
+      in Erinnerung bleibt. Selbst sein Name strahlt Macht aus, wie eine Warnung
+      an alle, die nach ihm kommen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7689553726001152
+    m_Localized: "Diese Worte sind mehr als nur ein Gebet... Der Verfasser war in
+      echter Not. Er hat hier einen Hilferuf an den Himmel hinterlassen, in der Hoffnung,
+      dass jemand zuh\xF6rt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690195274158080
+    m_Localized: "Es ist herzzerrei\xDFend, wie manche Gef\xFChle die Zeit \xFCberdauern...
+      Jemand flehte hier den Himmel an, nachdem Salim gegangen war. Ehemann oder
+      Liebhaber, wir wissen es nicht, aber der Schmerz ist in jedem Buchstaben sp\xFCrbar."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690467144749056
+    m_Localized: "Die D\xFCrre hier muss grausam gewesen sein. Wenn Menschen ihre
+      G\xF6tter um Regen anflehen, hat das Land seine absolute Belastungsgrenze erreicht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690698187984896
+    m_Localized: "Anders als erwartet, hat der Verfasser seine pers\xF6nlichen Begierden
+      nicht verheimlicht. Er hat sie offen in den Stein gemei\xDFelt, damit sie ihn
+      \xFCberdauern."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690894959562752
+    m_Localized: "Scheinbar verlie\xDF der Autor das Nomadenleben aus Armut. Diese
+      Inschrift deutet darauf hin, dass einige Thamud\xE4er auf der Suche nach einem
+      besseren Leben in die St\xE4dte zogen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691127919595520
+    m_Localized: "Eine weitere Inschrift, die genau denselben Herzschmerz dokumentiert...
+      \"Salim ist gegangen\". Es scheint, ihre Geschichte war wohlbekannt, oder vielleicht
+      kehrte sie zur\xFCck, um ihren Schmerz an einem anderen Ort erneut einzumei\xDFeln."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691387874168832
+    m_Localized: "Er suchte nach einem Gl\xFCck, das die Zeit nicht zerst\xF6ren
+      konnte. Manchmal reicht ein kurzer Satz aus, um die schwere Last des Verfassers
+      zu offenbaren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691536629354496
+    m_Localized: "Die Inschrift weist auf Gr\xE4ber hin, die auf einem nahegelegenen
+      H\xFCgel errichtet wurden. Vielleicht wurde der Ort absichtlich gew\xE4hlt,
+      damit sie f\xFCr die Lebenden sichtbar blieben."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691845879582720
+    m_Localized: "'F\xFCr Wahab El'... Eine sehr kurze Inschrift. Ein einfacher Beweis
+      der Existenz von jemandem, der seinen Namen mit seinen G\xF6ttern verbinden
+      wollte, um unter ihrem Schutz zu bleiben."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692042076540928
+    m_Localized: '''Von Muqim''... Dieser Name wurde hier senkrecht eingeritzt. Manchmal
+      ist das Einzige, was ein Mensch sucht, nicht vergessen zu werden.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692306187669504
+    m_Localized: "Diese Inschrift ist von entscheidender Bedeutung... Sie verr\xE4t
+      uns, dass die Menschen dieses Landes nicht nur Nomaden waren; sie betrieben
+      schon vor vielen Jahrhunderten Landwirtschaft."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692505362583552
+    m_Localized: "Nicht alles, was in Stein gemei\xDFelt ist, ist tiefgr\xFCndig...
+      Es scheint, dass diese Inschrift nur einen Mann namens Sharaf verspottet. Die
+      Menschen haben sich wirklich nicht viel ver\xE4ndert."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692696350216192
+    m_Localized: "'Hajjaj' ist ein alter, bekannter Name. Vielleicht wurde er so
+      genannt, weil er w\xE4hrend einer Pilgersaison oder eines wichtigen religi\xF6sen
+      Ereignisses geboren wurde."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692927041130496
+    m_Localized: "'Gr\xFC\xDFe von Sad und Ali'... Eine Inschrift, die zwei Br\xFCder
+      vereint. Das Sch\xF6ne daran ist, dass ihre Mutter 'Nima' mit ihnen erw\xE4hnt
+      wird; vielleicht hatte sie einen hohen Status oder wurde sehr geliebt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693144008282112
+    m_Localized: "'Von Ra\u2019ab bin Jamam'... Einfach ein still eingravierter Name.
+      Wer wei\xDF, was f\xFCr ein Leben dieser Mann f\xFChrte, bevor er als stille
+      Erinnerung an dieser Wand endete."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693346932903936
+    m_Localized: Der Besitz einer reinrassigen Stute war ein Zeichen von Status und
+      Reichtum. Es scheint, der Autor war unglaublich stolz auf seinen Besitz.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693554395762688
+    m_Localized: '''Jaba bin Af''... Eine sehr kurze Inschrift. Vielleicht hatte
+      er keine Zeit, mehr zu schreiben, oder vielleicht reichte sein Name allein
+      aus, um von jedem erkannt zu werden.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693780376473600
+    m_Localized: "'A'a hielt Wache'... Das ist nicht nur ein Andenken. Es scheint,
+      jemand hielt hier Wache und hinterlie\xDF diese Markierung, um eine lange Schicht
+      an diesem trostlosen Ort zu dokumentieren."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694138188353536
+    m_Localized: "'Von Basil'... Er w\xE4hlte einen Namen, der seine Tapferkeit widerspiegelt,
+      und stellte sicher, dass er in Stein gemei\xDFelt bleibt, so wie in der Erinnerung
+      derer, die ihn kannten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694335995924480
+    m_Localized: "Diese Inschrift ist anders... Sie wurde f\xFCr einen besorgten
+      Bruder geschrieben. Ein einfaches Gebet, aber es offenbart die tiefe Liebe
+      zwischen ihnen."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694353498755072
+    m_Localized: Der Verfasser dieser Inschrift bat weder um Reichtum noch um Ruhm...
+      Er wollte nur, dass seine Tortur ein Ende hat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761095872860160
+    m_Localized: Inschrift lesen
     m_Metadata:
       m_Items: []
   references:

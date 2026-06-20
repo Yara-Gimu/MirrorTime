@@ -1,123 +1,110 @@
 using UnityEngine;
-using UnityEngine.EventSystems; 
-using TMPro; 
+using UnityEngine.EventSystems; // 🌟 ضروري للماوس ويد التحكم
+using TMPro;
 
-// هذا السطر يخلي يونيتي يضيف (AudioSource) تلقائياً للزر عشان ما تنسين!
-[RequireComponent(typeof(AudioSource))] 
-public class ButtonEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler, IPointerClickHandler, ISubmitHandler
+// 🌟 أضفنا ISelectHandler و IDeselectHandler لدعم يد السوني والإكس بوكس
+public class ButtonEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
-    [Header("Settings")]
-    public TextMeshProUGUI buttonText; 
+    [Header("إعدادات النص")]
+    public TMP_Text buttonText;
 
-    [Header("Colors")]
-    public Color normalTextColor = new Color32(46, 35, 31, 255); 
-    public Color hoverTextColor = new Color32(232, 224, 213, 255); 
+    [Header("إعدادات الألوان")]
+    public Color normalTextColor = Color.white;
+    public Color hoverTextColor = new Color(0.9f, 0.8f, 0.6f, 1f); // اللون الذهبي
 
-    [Header("Glow Settings")]
-    public Color glowColor = new Color32(232, 224, 213, 150); 
-    [Range(0f, 1f)]
-    public float glowPower = 0.5f; 
+    [Header("إعدادات التوهج (Glow)")]
+    public Color glowColor = new Color(0.9f, 0.8f, 0.6f, 1f);
+    [Range(0, 1)] public float glowPower = 0.5f;
 
-    [Header("Audio Settings (إعدادات الصوت)")]
-    public AudioClip hoverSound; // صوت المرور على الزر
-    public AudioClip clickSound; // صوت الضغط/الاختيار
+    [Header("إعدادات الصوت (Audio)")]
+    public AudioClip hoverSound;
+    public AudioClip clickSound;
+
     private AudioSource audioSource;
-
-    private Material textMaterial;
-    private Vector3 originalScale; 
+    private Material textMat;
+    private bool isHighlighted = false;
 
     void Awake()
     {
-        originalScale = transform.localScale;
+        audioSource = GetComponent<AudioSource>();
         
         if (buttonText != null)
         {
-            textMaterial = buttonText.fontMaterial;
+            // إنشاء نسخة من الماتيريال حتى لا نتلاعب بالخط الأصلي للعبة كاملة
+            textMat = new Material(buttonText.fontMaterial);
+            buttonText.fontMaterial = textMat;
         }
-
-        // تجهيز مشغل الصوت وإقفال التشغيل التلقائي
-        audioSource = GetComponent<AudioSource>();
-        audioSource.playOnAwake = false;
         
-        ResetButton();
+        ResetEffect();
     }
 
-    // --- أوامر المرور (Hover) بالماوس والقير ---
+    // ==========================================
+    // 1. أوامر الماوس (PC)
+    // ==========================================
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ApplyHoverEffect();
-        PlayHoverSound();
+        ApplyEffect();
     }
 
-    public void OnSelect(BaseEventData eventData)
-    {
-        ApplyHoverEffect();
-        PlayHoverSound();
-    }
-
-    // --- أوامر الخروج (Exit) ---
     public void OnPointerExit(PointerEventData eventData)
     {
-        ResetButton();
+        // 🌟 حماية ذكية: لا تطفئ التوهج إذا كانت يد التحكم لا تزال تقف على الزر!
+        if (EventSystem.current.currentSelectedGameObject != gameObject)
+        {
+            ResetEffect();
+        }
+    }
+
+    // ==========================================
+    // 2. أوامر يد التحكم والكيبورد (Consoles)
+    // ==========================================
+    public void OnSelect(BaseEventData eventData)
+    {
+        ApplyEffect();
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
-        ResetButton();
+        ResetEffect();
     }
 
-    // --- أوامر الضغط/الاختيار (Click) بالماوس أو القير ---
-    public void OnPointerClick(PointerEventData eventData)
+    // ==========================================
+    // 3. المنطق البصري والصوتي (AAA Standard)
+    // ==========================================
+    private void ApplyEffect()
     {
-        PlayClickSound();
-    }
+        if (isHighlighted) return;
+        isHighlighted = true;
 
-    public void OnSubmit(BaseEventData eventData)
-    {
-        PlayClickSound();
-    }
-
-    // ✨ --- دوال التأثيرات ---
-    void ApplyHoverEffect()
-    {
-        if(buttonText != null) buttonText.color = hoverTextColor;
-        if(textMaterial != null)
+        if (buttonText != null)
         {
-            textMaterial.EnableKeyword("GLOW_ON");
-            textMaterial.SetColor("_GlowColor", glowColor);
-            textMaterial.SetFloat("_GlowPower", glowPower);
+            buttonText.color = hoverTextColor;
+            if (textMat != null)
+            {
+                textMat.EnableKeyword("GLOW_ON");
+                textMat.SetColor("_GlowColor", glowColor);
+                textMat.SetFloat("_GlowPower", glowPower);
+            }
         }
-        transform.localScale = originalScale * 1.05f; 
-    }
 
-    void ResetButton()
-    {
-        if(buttonText != null) buttonText.color = normalTextColor;
-        if(textMaterial != null)
+        if (hoverSound != null && audioSource != null)
         {
-            textMaterial.DisableKeyword("GLOW_ON");
-            textMaterial.SetFloat("_GlowPower", 0f);
-        }
-        transform.localScale = originalScale;
-    }
-
-    // 🎵 --- دوال تشغيل الصوت ---
-    void PlayHoverSound()
-    {
-        if (hoverSound != null)
-        {
-            // تغيير النغمة بشكل بسيط جداً عشان ما يصير الصوت مكرر وممل
-            audioSource.pitch = Random.Range(0.95f, 1.05f); 
             audioSource.PlayOneShot(hoverSound);
         }
     }
 
-    void PlayClickSound()
+    private void ResetEffect()
     {
-        if (clickSound != null)
+        isHighlighted = false;
+
+        if (buttonText != null)
         {
-            audioSource.pitch = Random.Range(0.9f, 1.1f); // تغيير النغمة للضغطة
-            audioSource.PlayOneShot(clickSound);
+            buttonText.color = normalTextColor;
+            if (textMat != null)
+            {
+                textMat.DisableKeyword("GLOW_ON");
+                textMat.SetFloat("_GlowPower", 0f);
+            }
         }
     }
 }

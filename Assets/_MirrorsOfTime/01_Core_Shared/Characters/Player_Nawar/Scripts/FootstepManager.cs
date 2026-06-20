@@ -13,7 +13,6 @@ public class FootstepArchitecture : MonoBehaviour
         public AudioClip[] crawlSounds; 
         
         [Header("--- مؤثرات الغبار/التطاير (VFX) ---")]
-        [Tooltip("اسحبي مجسم الـ VFX الخاص بهذي الأرضية هنا")]
         public ParticleSystem dustVFXPrefab; 
     }
 
@@ -21,10 +20,12 @@ public class FootstepArchitecture : MonoBehaviour
     public SurfaceAudio sand;
     public SurfaceAudio stone;
     public SurfaceAudio wood;
-    public SurfaceAudio grass; // تم إضافة العشب هنا
+    public SurfaceAudio grass; 
 
-    [Header("--- إعدادات الاستشعار (Raycast) ---")]
-    public float rayDistance = 1.5f; 
+    [Header("--- إعدادات الاستشعار (SphereCast) ---")]
+    public float rayDistance = 0.5f; 
+    [Tooltip("نصف قطر كرة الاستشعار لضمان دقة اصطدام القدم")]
+    public float sphereRadius = 0.3f; 
 
     private AudioSource audioSource;
 
@@ -37,9 +38,10 @@ public class FootstepArchitecture : MonoBehaviour
 
     public void PlayFootstepEvent(string action)
     {
-        Vector3 rayStart = transform.position + (Vector3.up * 0.1f);
+        Vector3 rayStart = transform.position + (Vector3.up * 0.5f); // رفعنا نقطة البداية قليلاً
 
-        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, rayDistance))
+        // 🌟 الإصلاح السحري: استخدام SphereCast بدلاً من Raycast لضمان عدم تفويت الحواف أو الدرج
+        if (Physics.SphereCast(rayStart, sphereRadius, Vector3.down, out RaycastHit hit, rayDistance))
         {
             string surfaceTag = hit.collider.tag;
             SurfaceAudio currentSurface;
@@ -48,14 +50,11 @@ public class FootstepArchitecture : MonoBehaviour
             {
                 case "Stone": currentSurface = stone; break;
                 case "Wood":  currentSurface = wood; break;
-                case "Grass": currentSurface = grass; break; // تم إضافة حالة العشب هنا
+                case "Grass": currentSurface = grass; break; 
                 case "Sand": 
                 default:      currentSurface = sand; break;
             }
 
-            // ==========================================
-            // 1. نظام تشغيل الصوت 
-            // ==========================================
             AudioClip[] selectedSounds = null;
             switch (action)
             {
@@ -69,7 +68,6 @@ public class FootstepArchitecture : MonoBehaviour
             if (selectedSounds != null && selectedSounds.Length > 0)
             {
                 int randomIndex = Random.Range(0, selectedSounds.Length);
-                
                 audioSource.pitch = (action == "Crawl") ? Random.Range(0.8f, 0.95f) : Random.Range(0.9f, 1.1f);
                 
                 float volumeModifier = 1f;
@@ -81,24 +79,16 @@ public class FootstepArchitecture : MonoBehaviour
                 audioSource.PlayOneShot(selectedSounds[randomIndex], volumeModifier);
             }
 
-            // ==========================================
-            // 2. نظام تشغيل الغبار/التطاير (VFX) - AAA Style
-            // ==========================================
             if (currentSurface.dustVFXPrefab != null)
             {
-                // نحدد نسبة ظهور التأثير حسب الحركة
                 float spawnChance = 0f;
-                if (action == "Run" || action == "JumpLand") spawnChance = 1.0f; // 100% مع الركض والقفز
-                else if (action == "Walk") spawnChance = 0.4f; // 40% مع المشي
-                else if (action == "Crawl") spawnChance = 0.1f; // 10% مع الزحف
+                if (action == "Run" || action == "JumpLand") spawnChance = 1.0f; 
+                else if (action == "Walk") spawnChance = 0.4f; 
+                else if (action == "Crawl") spawnChance = 0.1f; 
                 
-                // إذا رمينا النرد وطلع الرقم ضمن النسبة المسموحة، نطلع التأثير!
                 if (Random.value <= spawnChance)
                 {
-                    // ننسخ الـ VFX في نقطة الاصطدام بالضبط، ونخليه يطالع لفوق حسب ميلان الأرض
                     ParticleSystem spawnedDust = Instantiate(currentSurface.dustVFXPrefab, hit.point, Quaternion.LookRotation(hit.normal));
-                    
-                    // نمسح مجسم التأثير من اللعبة بعد ثانيتين عشان ما نستهلك الذاكرة
                     Destroy(spawnedDust.gameObject, 2f); 
                 }
             }

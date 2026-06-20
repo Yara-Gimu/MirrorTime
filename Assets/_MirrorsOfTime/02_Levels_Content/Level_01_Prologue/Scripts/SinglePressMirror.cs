@@ -1,28 +1,42 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Cinemachine; 
 
 public class SinglePressMirror : MonoBehaviour
 {
     [Header("--- عناصر البيئة والـ 3D UI ---")]
-    [Tooltip("اسحبي مجسم الـ Sprite Renderer (صورة الزر) هنا")]
     public SpriteRenderer iconSprite;
-    
-    [Tooltip("مجسم الـ GameObject اللي عليه سكربت MirrorCinematicSequence")]
-    public GameObject cinematicManager; // تم تغيير الاسم هنا ليكون أكثر منطقية
+    public GameObject cinematicManager; 
 
     [Header("--- أيقونات الأجهزة ---")]
-    public Sprite kbIcon;   // حرف E
-    public Sprite xboxIcon; // X
-    public Sprite psIcon;   // مربع
+    public Sprite kbIcon;   
+    public Sprite xboxIcon; 
+    public Sprite psIcon;   
 
     [Header("--- إعدادات الإدخال والتفاعل ---")]
-    [Tooltip("اسحبي الـInputAction حق التفاعل (مثلاً E) هنا")]
     public InputActionReference interactAction;
-
-    [Header("--- إعدادات حركة الطفو (سينمائية) ---")]
     public float fadeSpeed = 5f;
     public float floatSpeed = 2f;
     public float floatHeight = 0.1f;
+
+    [Header("--- 🎥 الكاميرات (المخرج) ---")]
+    [Tooltip("الكاميرا الجانبية اللي تشتغل أول ما تضغطين E")]
+    public CinemachineCamera sideCamera;
+    
+    [Tooltip("كاميرا الاستعراض اللي تشتغل بعد نزول المرآة")]
+    public CinemachineCamera reflectionCamera;
+
+    [Header("--- 🌟 إعدادات وقوف الممثل (Director's Mark) ---")]
+    public Transform playerStandingMark;
+    public float playerPositioningDuration = 0.8f;
+
+    [Header("--- إعدادات نزول المرآة الحقيقية ---")]
+    public Transform mirrorTransform; 
+    public Transform targetLandingPosition;
+    public float descentDuration = 2.5f;
+    
+    public MonoBehaviour mirrorFloatScript; 
 
     private bool isPlayerNear = false;
     private bool isMirrorBroken = false;
@@ -30,13 +44,13 @@ public class SinglePressMirror : MonoBehaviour
     private Vector3 startPos;
     private Camera mainCamera;
     private PlayerInput playerInput;
+    private GameObject playerRef; 
 
     void Start()
     {
         mainCamera = Camera.main;
         playerInput = FindFirstObjectByType<PlayerInput>();
 
-        // إخفاء الأيقونة في البداية
         if (iconSprite != null)
         {
             startPos = iconSprite.transform.localPosition;
@@ -44,39 +58,21 @@ public class SinglePressMirror : MonoBehaviour
             c.a = 0f;
             iconSprite.color = c;
         }
-    }
-
-    void OnEnable()
-    {
-        if (interactAction != null)
-        {
-            interactAction.action.Enable();
-            interactAction.action.performed += OnInteractPressed;
-        }
-    }
-
-    void OnDisable()
-    {
-        if (interactAction != null)
-        {
-            interactAction.action.performed -= OnInteractPressed;
-        }
+        
+        if (interactAction != null) interactAction.action.Enable();
     }
 
     void Update()
     {
         if (isMirrorBroken || iconSprite == null || mainCamera == null) return;
 
-        // 1. تحديث شكل الأيقونة حسب الجهاز
         UpdateIconBasedOnDevice();
 
-        // 2. الظهور والاختفاء الناعم
         targetAlpha = isPlayerNear ? 1f : 0f;
         Color currentColor = iconSprite.color;
         currentColor.a = Mathf.Lerp(currentColor.a, targetAlpha, Time.deltaTime * fadeSpeed);
         iconSprite.color = currentColor;
 
-        // 3. حركة الطفو ومواجهة الكاميرا
         if (currentColor.a > 0.01f)
         {
             float newY = startPos.y + Mathf.Sin(Time.time * floatSpeed) * floatHeight;
@@ -87,47 +83,107 @@ public class SinglePressMirror : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")) isPlayerNear = true;
+        if (other.CompareTag("Player"))
+        {
+            isPlayerNear = true;
+            playerRef = other.gameObject; 
+            if (interactAction != null) interactAction.action.started += OnInteractPressed;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player")) isPlayerNear = false;
+        if (other.CompareTag("Player"))
+        {
+            isPlayerNear = false;
+            playerRef = null;
+            if (interactAction != null) interactAction.action.started -= OnInteractPressed;
+        }
     }
 
     private void OnInteractPressed(InputAction.CallbackContext context)
     {
-        if (isPlayerNear && !isMirrorBroken)
-        {
-            BreakTheMirror();
-        }
+        if (isPlayerNear && !isMirrorBroken) BreakTheMirror();
     }
 
     void BreakTheMirror()
     {
         isMirrorBroken = true;
         
-        // إخفاء الأيقونة فوراً
+        if (interactAction != null) interactAction.action.started -= OnInteractPressed;
         if (iconSprite != null) iconSprite.enabled = false;
 
-        // 🌟 السحر هنا: نأمر المشهد السينمائي بالبدء
+        StartCoroutine(FullSceneSetupSequence());
+    }
+
+    private IEnumerator FullSceneSetupSequence()
+    {
+        // 1. الكاميرا الجانبية
+        if (sideCamera != null) sideCamera.Priority = 200;
+        if (mirrorFloatScript != null) mirrorFloatScript.enabled = false;
+
+        // 2. توجيه اللاعب
+        if (playerRef != null && playerStandingMark != null)
+        {
+            CharacterController cc = playerRef.GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
+
+            MonoBehaviour stateMachine = playerRef.GetComponent("PlayerStateMachine") as MonoBehaviour;
+            if (stateMachine != null) stateMachine.enabled = false;
+
+            Vector3 startPlayerPos = playerRef.transform.position;
+            Quaternion startPlayerRot = playerRef.transform.rotation;
+            float elapsedPlayer = 0f;
+
+            while (elapsedPlayer < playerPositioningDuration)
+            {
+                elapsedPlayer += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, elapsedPlayer / playerPositioningDuration);
+                playerRef.transform.position = Vector3.Lerp(startPlayerPos, playerStandingMark.position, t);
+                playerRef.transform.rotation = Quaternion.Slerp(startPlayerRot, playerStandingMark.rotation, t);
+                yield return null;
+            }
+            playerRef.transform.position = playerStandingMark.position;
+            playerRef.transform.rotation = playerStandingMark.rotation;
+        }
+
+        // 3. نزول المرآة
+        if (mirrorTransform != null && targetLandingPosition != null)
+        {
+            Vector3 startMirrorPos = mirrorTransform.position;
+            Vector3 endMirrorPos = targetLandingPosition.position;
+            float elapsedMirror = 0f;
+
+            while (elapsedMirror < descentDuration)
+            {
+                elapsedMirror += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, elapsedMirror / descentDuration);
+                mirrorTransform.position = Vector3.Lerp(startMirrorPos, endMirrorPos, t);
+                yield return null;
+            }
+            mirrorTransform.position = endMirrorPos;
+        }
+
+        // 🌟 4. تشغيل كاميرا الاستعراض الثانية من هنا! (بناءً على فكرتك)
+        if (reflectionCamera != null)
+        {
+            // نشغل أبوها إذا كان مطفي
+            if (reflectionCamera.transform.parent != null)
+            {
+                reflectionCamera.transform.parent.gameObject.SetActive(true);
+            }
+            reflectionCamera.gameObject.SetActive(true);
+            reflectionCamera.Priority = 9999; // تقطع فوراً على الكاميرا الجانبية
+        }
+
+        // 🌟 5. تسليم الراية لفني المؤثرات
         if (cinematicManager != null)
         {
             cinematicManager.SetActive(true);
-
-            // استدعاء السكربت باسمه الجديد
             MirrorCinematicSequence cinematicScript = cinematicManager.GetComponent<MirrorCinematicSequence>();
-            if (cinematicScript != null)
-            {
-                cinematicScript.StartSequenceFromMirror(); // أمر البدء المباشر
-            }
-            else
-            {
-                Debug.LogError("⚠️ تأكدي إن سكربت MirrorCinematicSequence موجود على مجسم الـ cinematicManager!");
-            }
+            if (cinematicScript != null) cinematicScript.StartSequenceFromMirror(); 
         }
-
-        // إيقاف هذا السكربت عشان ما ينضغط الزر مرتين
+        
         this.enabled = false;
     }
 
@@ -135,7 +191,7 @@ public class SinglePressMirror : MonoBehaviour
     {
         if (playerInput == null) return;
         string currentDevice = playerInput.currentControlScheme;
-        if (currentDevice == "Keyboard&Mouse") iconSprite.sprite = kbIcon;
+        if (currentDevice == "Keyboard&Mouse" || currentDevice == "Keyboard") iconSprite.sprite = kbIcon;
         else if (currentDevice == "Gamepad")
         {
             Gamepad gamepad = Gamepad.current;

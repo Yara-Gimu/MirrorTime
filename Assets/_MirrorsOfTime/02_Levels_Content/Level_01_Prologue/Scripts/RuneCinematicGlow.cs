@@ -17,28 +17,34 @@ public class RuneCinematicGlow : MonoBehaviour
     [Header("The Feel (المنحنى السينمائي)")]
     public AnimationCurve appearanceCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    private static readonly string ColorProperty = "Color_80E46BEA";
+    private static readonly int ColorPropertyID = Shader.PropertyToID("Color_80E46BEA");
     private bool hasTriggered = false;
+    
+    // 🌟 استخدام البلوك الموحد للذاكرة
+    private MaterialPropertyBlock propBlock;
 
     private void Start()
     {
+        propBlock = new MaterialPropertyBlock();
+        
         Debug.Log("🚀 اللعبة بدأت: جاري إطفاء النقوش...");
         foreach (Renderer rune in runes)
         {
             if (rune != null)
             {
-                rune.material.SetColor(ColorProperty, Color.black); 
+                // 🌟 إطفاء النقوش بطريقة آمنة على الذاكرة
+                rune.GetPropertyBlock(propBlock);
+                propBlock.SetColor(ColorPropertyID, Color.black);
+                rune.SetPropertyBlock(propBlock);
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("🚶‍♀️ جسم لمس التريجر! اسم الجسم: " + other.gameObject.name + " | التاق حقه: " + other.tag);
-
         if (!hasTriggered && other.CompareTag("Player"))
         {
-            Debug.Log("✅ نورة دخلت التريجر بنجاح! جاري تشغيل موجة النور...");
+            Debug.Log("✅ نوار دخلت التريجر بنجاح! جاري تشغيل موجة النور...");
             hasTriggered = true;
             StartCoroutine(PlayWave());
         }
@@ -56,7 +62,6 @@ public class RuneCinematicGlow : MonoBehaviour
     private IEnumerator FadeGlow(Renderer rune)
     {
         float timer = 0f;
-        Material mat = rune.material;
 
         while (timer < fadeDuration)
         {
@@ -66,10 +71,17 @@ public class RuneCinematicGlow : MonoBehaviour
             float curveVal = appearanceCurve.Evaluate(progress);
             Color currentColor = targetGlowColor * curveVal;
 
-            mat.SetColor(ColorProperty, currentColor);
+            // 🌟 تغيير اللون بدون تدمير الـ Batching
+            rune.GetPropertyBlock(propBlock);
+            propBlock.SetColor(ColorPropertyID, currentColor);
+            rune.SetPropertyBlock(propBlock);
+            
             yield return null;
         }
         
-        mat.SetColor(ColorProperty, targetGlowColor);
+        // التأكيد على اللون النهائي
+        rune.GetPropertyBlock(propBlock);
+        propBlock.SetColor(ColorPropertyID, targetGlowColor);
+        rune.SetPropertyBlock(propBlock);
     }
 }

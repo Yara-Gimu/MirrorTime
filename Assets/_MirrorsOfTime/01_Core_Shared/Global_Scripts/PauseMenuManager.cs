@@ -1,60 +1,46 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using TMPro; 
-using UnityEngine.SceneManagement; 
-using UnityEngine.Rendering; 
-using UnityEngine.InputSystem; // 🌟 ضروري لقراءة نوع يد التحكم
+using UnityEngine.Rendering;
+using UnityEngine.InputSystem; 
 
 public class PauseMenuManager : MonoBehaviour
 {
-    // 🌟 نظام Singleton للوصول السريع من أي سكربت ثاني بدون GetComponent
     public static PauseMenuManager Instance;
 
-    [Header("شاشات الواجهة (UI)")]
+    [Header("--- الواجهات (UI) ---")]
     public GameObject pauseMenuCanvas; 
     public GameObject settingsCanvas;  
 
-    [Header("تأثيرات بصرية (AAA)")]
+    [Header("--- التأثيرات البصرية ---")]
     public Volume blurVolume; 
 
-    [Header("--- إعدادات التلميح الذكي (UI Panel) ---")]
-    [Tooltip("اسحبي الـ CanvasGroup اللي يجمع النص والصورة معاً")]
+    [Header("--- نظام الإدخال الجديد (Command Pattern) ---")]
+    [Tooltip("اسحبي حدث الإيقاف هنا (مثلاً زر Options في اليد أو ESC)")]
+    public InputActionReference pauseAction;
+
+    [Header("--- التلميح الذكي ---")]
     public CanvasGroup hintCanvasGroup; 
-    
-    [Tooltip("اسحبي الـ Image اللي بنغير صورتها حسب جهاز اللاعب")]
     public Image hintIconImage; 
-
-    [Header("أيقونات الأجهزة")]
-    public Sprite pcIcon;
-    public Sprite psIcon;
-    public Sprite xboxIcon;
-
-    [Header("إعدادات اللاعب")]
-    [Tooltip("اسحبي اللاعب (Nawar) هنا لمعرفة نوع التحكم")]
+    public Sprite pcIcon, psIcon, xboxIcon;
     public PlayerInput playerInput;
-
-    [Header("وقت التلميح")]
-    public float hintDuration = 4f;    
+    public float hintDuration = 4f;     
 
     private bool isPaused = false;
-    private bool hasHintPlayed = false; // عشان ما يشتغل التلميح إلا مرة وحدة بس
+    private bool hasHintPlayed = false;
 
     void Awake()
     {
-        // إعداد الـ Singleton
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
     void Start()
     {
-        // 1. إغلاق القوائم وتصفية الشاشة
         if (pauseMenuCanvas != null) pauseMenuCanvas.SetActive(false);
         if (settingsCanvas != null) settingsCanvas.SetActive(false);
         if (blurVolume != null) blurVolume.weight = 0f; 
 
-        // 2. إخفاء التلميح تماماً في البداية (الشفافية صفر)
         if (hintCanvasGroup != null)
         {
             hintCanvasGroup.alpha = 0f;
@@ -62,13 +48,24 @@ public class PauseMenuManager : MonoBehaviour
         }
     }
 
-    void Update()
+    void OnEnable()
     {
-        // 3. مراقبة ضغطة الإيقاف (ESC أو زر Start في اليد)
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (pauseAction != null)
         {
-            TogglePause();
+            pauseAction.action.Enable();
+            pauseAction.action.performed += OnPausePerformed;
         }
+    }
+
+    void OnDisable()
+    {
+        if (pauseAction != null)
+            pauseAction.action.performed -= OnPausePerformed;
+    }
+
+    private void OnPausePerformed(InputAction.CallbackContext context)
+    {
+        TogglePause();
     }
 
     public void TogglePause()
@@ -83,8 +80,6 @@ public class PauseMenuManager : MonoBehaviour
             else PauseGame();
         }
     }
-
-    // --- وظائف التحكم ---
 
     public void PauseGame()
     {
@@ -124,7 +119,10 @@ public class PauseMenuManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1f; 
-        SceneManager.LoadScene("MainMenu"); 
+        if (FadeManager.instance != null)
+            FadeManager.instance.LoadSceneSmoothly("MainMenu"); 
+        else
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     public void QuitGame()
@@ -136,12 +134,11 @@ public class PauseMenuManager : MonoBehaviour
     // --- نظام التلميح السينمائي الذكي (AAA) ---
     // ==========================================
 
-    // 🌟 هذي الدالة اللي بنناديها من سكربت حركة نوار
     public void TriggerPauseHint()
     {
         if (hintCanvasGroup != null && !hasHintPlayed)
         {
-            hasHintPlayed = true; // عشان ما يتكرر كل ما تركض
+            hasHintPlayed = true; 
             StartCoroutine(PlayHintSequence());
         }
     }
@@ -176,12 +173,10 @@ public class PauseMenuManager : MonoBehaviour
     IEnumerator PlayHintSequence()
     {
         hintCanvasGroup.gameObject.SetActive(true);
-        UpdateHintIcon(); // نحدث الصورة قبل الظهور
+        UpdateHintIcon(); 
 
-        // 1. فترة "التنفس" (ثانية ونص)
         yield return new WaitForSeconds(1.5f);
 
-        // 2. ظهور ناعم (Fade In) للمجموعة كاملة
         float fadeTime = 1f;
         float elapsed = 0f;
         while (elapsed < fadeTime)
@@ -191,10 +186,8 @@ public class PauseMenuManager : MonoBehaviour
             yield return null;
         }
 
-        // 3. الانتظار ليقرأ اللاعب
         yield return new WaitForSeconds(hintDuration);
 
-        // 4. اختفاء ناعم (Fade Out)
         elapsed = 0f;
         while (elapsed < fadeTime)
         {

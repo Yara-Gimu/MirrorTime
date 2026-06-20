@@ -15,30 +15,6 @@ MonoBehaviour:
   m_TableCollectionName: SubtitlesTable
   m_TableCollectionNameGuidString: e0d730566caf14b4fb9298c4121a9d74
   m_Entries:
-  - m_Id: 477120024576
-    m_Key: Open_Nawar_01_a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 580698361856
-    m_Key: Open_Nawar_01_b
-    m_Metadata:
-      m_Items: []
-  - m_Id: 616366723072
-    m_Key: Open_Nawar_01_c
-    m_Metadata:
-      m_Items: []
-  - m_Id: 636637794304
-    m_Key: Open_Nawar_02
-    m_Metadata:
-      m_Items: []
-  - m_Id: 667696615424
-    m_Key: Open_Nawar_03_a
-    m_Metadata:
-      m_Items: []
-  - m_Id: 689460858880
-    m_Key: Open_Nawar_03_b
-    m_Metadata:
-      m_Items: []
   - m_Id: 724982419456
     m_Key: Gates_Wahaj_01
     m_Metadata:
@@ -65,6 +41,126 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 9435209650176
     m_Key: Empty_Line
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6742053976395776
+    m_Key: Prologue_Nawar_Log_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6742080794775552
+    m_Key: Prologue_Nawar_Log_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6742115204845568
+    m_Key: Prologue_Nawar_Log_03
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6742149170319360
+    m_Key: Prologue_Nawar_Log_04
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6742172834582528
+    m_Key: Prologue_Nawar_Log_05
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6742177569951744
+    m_Key: Prologue_Nawar_Log_06
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688499558993920
+    m_Key: Cave_Rune_01
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688884822593536
+    m_Key: Cave_Rune_02
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7689553726001152
+    m_Key: Cave_Rune_08
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690195274158080
+    m_Key: Cave_Rune_09
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690467144749056
+    m_Key: Cave_Rune_10
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690698187984896
+    m_Key: Cave_Rune_11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690894959562752
+    m_Key: Cave_Rune_12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691127919595520
+    m_Key: Cave_Rune_13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691387874168832
+    m_Key: Cave_Rune_14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691536629354496
+    m_Key: Cave_Rune_16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691845879582720
+    m_Key: Cave_Rune_17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692042076540928
+    m_Key: Cave_Rune_18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692306187669504
+    m_Key: Cave_Rune_19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692505362583552
+    m_Key: Cave_Rune_20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692696350216192
+    m_Key: Cave_Rune_21
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692927041130496
+    m_Key: Cave_Rune_22
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693144008282112
+    m_Key: Cave_Rune_23
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693346932903936
+    m_Key: Cave_Rune_24
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693554395762688
+    m_Key: Cave_Rune_25
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693780376473600
+    m_Key: Cave_Rune_26
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694138188353536
+    m_Key: Cave_Rune_27
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694335995924480
+    m_Key: Cave_Rune_33
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694353498755072
+    m_Key: Cave_Rune_34
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761095872860160
+    m_Key: UI_Action_ReadRune
     m_Metadata:
       m_Items: []
   m_Metadata:

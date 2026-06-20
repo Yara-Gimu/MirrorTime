@@ -5,137 +5,128 @@ using UnityEngine.Audio;
 
 public class FallingTrap : MonoBehaviour
 {
-    [System.Serializable]
-    public class RockPiece
-    {
-        public Transform rockTransform;
-        public Transform targetDropPosition;
-        public float fallDelay = 0f;
-        public AudioClip rockSound; 
-        public CinemachineImpulseSource impulseSource;
-    }
+    [System.Serializable]
+    public class RockPiece
+    {
+        public Transform rockTransform;
+        public Transform targetDropPosition;
+        public float fallDelay = 0f;
+        public AudioClip rockSound; 
+        public CinemachineImpulseSource impulseSource;
+    }
 
-    [Header("قائمة الصخور")]
-    [SerializeField] RockPiece[] rocks; 
+    [Header("قائمة الصخور")]
+    [SerializeField] RockPiece[] rocks; 
 
-    [Header("إعدادات السقوط")]
-    [SerializeField] float gravityAcceleration = 15f; 
-    
-    [Header("--- المؤثرات الصوتية (البيئة والصخور) ---")]
-    [SerializeField] ParticleSystem impactDust; 
-    [Tooltip("هذي السماعة للصخور (خليها 3D ومكانها عند السقف)")]
-    [SerializeField] AudioSource environmentAudioSource; 
-    
-    [Header("--- المؤثرات الصوتية (السينمائية والكحة) ---")]
-    [Tooltip("هذي السماعة للكحة (خليها 2D عشان تنسمع بوضوح)")]
-    [SerializeField] AudioSource cinematicAudioSource; 
-    [SerializeField] AudioClip coughSound; 
-    [Tooltip("كم ثانية تنتظر نورة بعد الكحة الأولى عشان تكح المرة الثانية؟")]
-    [SerializeField] float timeBetweenCoughs = 2.8f;
+    [Header("إعدادات السقوط")]
+    [SerializeField] float gravityAcceleration = 15f; 
+    
+    [Header("--- المؤثرات الصوتية (البيئة والصخور) ---")]
+    [SerializeField] ParticleSystem impactDust; 
+    [Tooltip("هذي السماعة للصخور (خليها 3D ومكانها عند السقف)")]
+    [SerializeField] AudioSource environmentAudioSource; 
+    
+    // 🌟 تم حذف إعدادات صوت الكحة من هنا (cinematicAudioSource, coughSound, timeBetweenCoughs)
 
-    [Header("--- الميكسر ---")]
-    [SerializeField] AudioMixer mixer; 
-    [SerializeField] string musicVolumeParam = "InsideVol"; 
+    [Header("--- الميكسر ---")]
+    [SerializeField] AudioMixer mixer; 
+    [SerializeField] string musicVolumeParam = "InsideVol"; 
 
-    private bool hasFallen = false; 
+    private bool hasFallen = false; 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && !hasFallen)
-        {
-            hasFallen = true; 
-            
-            Animator playerAnim = other.GetComponent<Animator>();
-            if (playerAnim != null)
-            {
-                StartCoroutine(DelayedCough(playerAnim, 0.7f));
-            }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !hasFallen)
+        {
+            hasFallen = true; 
+            
+            Animator playerAnim = other.GetComponent<Animator>();
+            if (playerAnim != null)
+            {
+                // غيرنا اسم الكوروتين للتوضيح إنه للأنيميشن فقط
+                StartCoroutine(DelayedCoughAnimation(playerAnim, 0.7f)); 
+            }
 
-            StartCoroutine(AudioDuckingSequence());
+            StartCoroutine(AudioDuckingSequence());
 
-            foreach (var rock in rocks)
-            {
-                StartCoroutine(FallToTarget(rock));
-            }
-        }
-    }
+            foreach (var rock in rocks)
+            {
+                StartCoroutine(FallToTarget(rock));
+            }
+        }
+    }
 
-    IEnumerator AudioDuckingSequence()
-    {
-        float fadeOutTime = 0.2f; 
-        float holdTime = 2.5f;    
-        float fadeInTime = 2.0f;  
-        
-        float targetVolume = -20f;
-        float originalVolume = 0f; 
-        float timer = 0f;
+    IEnumerator AudioDuckingSequence()
+    {
+        float fadeOutTime = 0.2f; 
+        float holdTime = 2.5f;    
+        float fadeInTime = 2.0f;  
+        
+        float targetVolume = -20f;
+        float originalVolume = 0f; 
+        float timer = 0f;
 
-        while(timer < fadeOutTime) 
-        {
-            timer += Time.deltaTime;
-            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(originalVolume, targetVolume, timer / fadeOutTime));
-            yield return null;
-        }
+        while(timer < fadeOutTime) 
+        {
+            timer += Time.deltaTime;
+            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(originalVolume, targetVolume, timer / fadeOutTime));
+            yield return null;
+        }
 
-        yield return new WaitForSeconds(holdTime);
+        yield return new WaitForSeconds(holdTime);
 
-        timer = 0f;
-        while(timer < fadeInTime) 
-        {
-            timer += Time.deltaTime;
-            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(targetVolume, originalVolume, timer / fadeInTime));
-            yield return null;
-        }
-    }
+        timer = 0f;
+        while(timer < fadeInTime) 
+        {
+            timer += Time.deltaTime;
+            if (mixer != null) mixer.SetFloat(musicVolumeParam, Mathf.Lerp(targetVolume, originalVolume, timer / fadeInTime));
+            yield return null;
+        }
+    }
 
-    IEnumerator DelayedCough(Animator anim, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        anim.SetTrigger("Cough");
+    // 🌟 هذا الكوروتين صار مسؤول فقط عن إعطاء الإشارة للأنيميشن
+    IEnumerator DelayedCoughAnimation(Animator anim, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        anim.SetTrigger("Cough");
 
-        // 🌟 نستخدم السماعة السينمائية للكحة!
-        if (cinematicAudioSource != null && coughSound != null)
-        {
-            cinematicAudioSource.PlayOneShot(coughSound); 
-            StartCoroutine(PlaySecondCough(timeBetweenCoughs)); 
-        }
-    }
+        // 🌟 تم حذف استدعاء الأصوات من هنا، الإيفينت في الأنيميشن بيتكفل فيها!
+    }
 
-    IEnumerator PlaySecondCough(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        // 🌟 نستخدم السماعة السينمائية للكحة الثانية!
-        if (cinematicAudioSource != null && coughSound != null)
-        {
-            cinematicAudioSource.PlayOneShot(coughSound);
-        }
-    }
+    // 🌟 تم حذف كوروتين PlaySecondCough بالكامل
 
-    IEnumerator FallToTarget(RockPiece rockPiece)
-    {
-        if (rockPiece.fallDelay > 0) yield return new WaitForSeconds(rockPiece.fallDelay);
+    IEnumerator FallToTarget(RockPiece rockPiece)
+    {
+        if (rockPiece.fallDelay > 0) yield return new WaitForSeconds(rockPiece.fallDelay);
 
-        float currentSpeed = 0f;
-        while (Vector3.Distance(rockPiece.rockTransform.position, rockPiece.targetDropPosition.position) > 0.05f)
-        {
-            currentSpeed += gravityAcceleration * Time.deltaTime;
-            rockPiece.rockTransform.position = Vector3.MoveTowards(rockPiece.rockTransform.position, rockPiece.targetDropPosition.position, currentSpeed * Time.deltaTime);
-            yield return null; 
-        }
+        float currentSpeed = 0f;
+        while (Vector3.Distance(rockPiece.rockTransform.position, rockPiece.targetDropPosition.position) > 0.05f)
+        {
+            currentSpeed += gravityAcceleration * Time.deltaTime;
+            rockPiece.rockTransform.position = Vector3.MoveTowards(rockPiece.rockTransform.position, rockPiece.targetDropPosition.position, currentSpeed * Time.deltaTime);
+            yield return null; 
+        }
 
-        rockPiece.rockTransform.position = rockPiece.targetDropPosition.position;
-        PlayImpactEffects(rockPiece.targetDropPosition.position, rockPiece.rockSound, rockPiece.impulseSource);
-    }
+        rockPiece.rockTransform.position = rockPiece.targetDropPosition.position;
+        PlayImpactEffects(rockPiece.targetDropPosition.position, rockPiece.rockSound, rockPiece.impulseSource);
+    }
 
-    private void PlayImpactEffects(Vector3 dropPosition, AudioClip soundToPlay, CinemachineImpulseSource impulseToTrigger)
+private void PlayImpactEffects(Vector3 dropPosition, AudioClip soundToPlay, CinemachineImpulseSource impulseToTrigger)
     {
         if (impactDust != null && !impactDust.isPlaying) impactDust.Play();
 
-        // 🌟 نستخدم سماعة البيئة لصوت الصخور!
+        // 🌟 سماعة البيئة للصخور لا تزال تعمل بشكل سليم
         if (environmentAudioSource != null && soundToPlay != null)
             environmentAudioSource.PlayOneShot(soundToPlay); 
         
+        // 🌟 التعديل السحري هنا: نسأل النظام أولاً: هل اللاعب يسمح باهتزاز الكاميرا؟
         if (impulseToTrigger != null)
-            impulseToTrigger.GenerateImpulseWithForce(1f); 
+        {
+            if (PlayerPrefs.GetInt("CameraShake", 1) == 1)
+            {
+                // إذا كان مفعل، قم بهز الكاميرا!
+                impulseToTrigger.GenerateImpulseWithForce(1f); 
+            }
+        }
     }
 }

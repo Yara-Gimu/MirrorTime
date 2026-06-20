@@ -1,21 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;                // عشان الدروب داون
-using UnityEngine.Localization; // مكتبة الترجمة
-using UnityEngine.Localization.Settings; // إعدادات الترجمة
+using TMPro;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using System.Collections.Generic;
 
 public class DropdownLocalizer : MonoBehaviour
 {
+    [Header("قائمة الخيارات (Dropdown)")]
     public TMP_Dropdown dropdown;
-    public string[] optionKeys; // هنا بنكتب المفاتيح (Quality_Low, etc)
+    
+    [Header("خيارات الترجمة")]
+    public LocalizedString[] localizedOptions;
 
     void OnEnable()
     {
-        // أول ما تشتغل اللعبة، نحدث القائمة
-        UpdateDropdownOptions();
-        // ونشترك في حدث تغيير اللغة (عشان لو غيرنا اللغة تتحدث القائمة فوراً)
+        // الاستماع لتغيير اللغة
         LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+        UpdateTranslations();
     }
 
     void OnDisable()
@@ -23,34 +24,31 @@ public class DropdownLocalizer : MonoBehaviour
         LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
     }
 
-    void OnLocaleChanged(Locale locale)
+    private void OnLocaleChanged(Locale locale)
     {
-        UpdateDropdownOptions();
+        UpdateTranslations();
     }
 
-    void UpdateDropdownOptions()
+    public void UpdateTranslations()
     {
-        // لازم ننتظر الترجمة تتحمل
-        StartCoroutine(UpdateRoutine());
-    }
+        if (dropdown == null || localizedOptions == null) return;
 
-    IEnumerator UpdateRoutine()
-    {
-        // ننتظر تحميل النظام
-        yield return LocalizationSettings.InitializationOperation;
-
-        var options = new List<string>();
-
-        // نلف على المفاتيح اللي انتي حطيتيها ونجيب ترجمتها
-        foreach (var key in optionKeys)
+        // 🌟 1. نحفظ اختيار اللاعب الحالي (مثلاً كان حاط الجودة: عالية)
+        int currentValue = dropdown.value;
+        
+        // تجهيز القائمة المترجمة
+        List<TMP_Dropdown.OptionData> newOptions = new List<TMP_Dropdown.OptionData>();
+        foreach (var locString in localizedOptions)
         {
-            var localizedString = LocalizationSettings.StringDatabase.GetLocalizedString("MyGameText", key); 
-            // تأكدي أن اسم الجدول هنا "MainMenu Table" يطابق اسم جدولك بالضبط
-            options.Add(localizedString);
+            newOptions.Add(new TMP_Dropdown.OptionData(locString.GetLocalizedString()));
         }
 
-        // نمسح القديم ونحط الجديد المترجم
+        // 🌟 2. تحديث الكلمات
         dropdown.ClearOptions();
-        dropdown.AddOptions(options);
+        dropdown.AddOptions(newOptions);
+        
+        // 🌟 3. الحل السحري: نرجع اختيار اللاعب بدون ما نطلق حدث OnValueChanged!
+        dropdown.SetValueWithoutNotify(currentValue);
+        dropdown.RefreshShownValue();
     }
 }

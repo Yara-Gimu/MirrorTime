@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,23 +11,21 @@ public class MainGateController : MonoBehaviour
     public GameObject portalGlowObject; 
     public GameObject centerSpotLightObject; 
 
-    [Header("--- منطق اللعبة (متى تفتح البوابة النهائية) ---")]
-    [Tooltip("رقم المرحلة المطلوبة لفتح البوابة بالكامل")]
+    [Header("--- منطق اللعبة ---")]
     public int levelRequiredToOpen = 4;
-
-    [Header("--- إعدادات الانتقال والتفاعل ---")]
     public string finalSceneName = "FinalEndingScene"; 
-    public InputActionReference interactAction; 
-    
-    [Tooltip("لون الوميض اللي بيظهر وقت الانتقال للبوابة الرئيسية")]
-    public Color fadeColor = Color.white;
 
-    // 🔥 التعديل هنا: غيرناها من GameObject إلى InteractPromptController
-    [Tooltip("اسحبي مجسم الأيقونة اللي عليه سكريبت InteractPromptController هنا")]
-    public InteractPromptController interactPrompt; 
+    [Header("--- إعدادات التفاعل والتحميل ---")]
+    public InputActionReference interactAction; 
+    [Tooltip("اسحبي أيقونة الدائرة المفرغة (LoadingCircle) هنا")]
+    public Image loadingCircle; 
+    public float holdDuration = 1.5f; // المدة المطلوبة للضغط المطول
     
+    [Header("--- إعدادات الواجهة والانتقال ---")]
+    public InteractPromptController interactPrompt; 
     public CanvasGroup whiteFade; 
     public float fadeSpeed = 1.5f;
+    public Color fadeColor = Color.white;
 
     [Header("--- الأصوات ---")]
     public AudioSource ambientLoopSound; 
@@ -36,64 +34,54 @@ public class MainGateController : MonoBehaviour
     private bool isPlayerInRange = false;
     private bool isTransitioning = false;
     private bool isFullyOpen = false; 
+    private Coroutine fillCoroutine;
 
     void Start()
     {
-        // 🔥 التعديل هنا: استخدام دالة الإخفاء الإجباري
         if (interactPrompt != null) interactPrompt.ForceHide();
         if (whiteFade != null) whiteFade.alpha = 0f;
+        if (loadingCircle != null) loadingCircle.fillAmount = 0f;
         
         CheckGateStatus();
     }
 
     private void OnEnable()
     {
-        if (interactAction != null) interactAction.action.performed += OnInteractPressed;
+        if (interactAction != null) 
+        {
+            interactAction.action.Enable();
+            interactAction.action.started += OnInteractStarted;
+            interactAction.action.canceled += OnInteractCanceled;
+        }
         EventManager.StartListening("Level_Completed", OnLevelCompletedEvent);
     }
 
     private void OnDisable()
     {
-        if (interactAction != null) interactAction.action.performed -= OnInteractPressed;
+        if (interactAction != null)
+        {
+            interactAction.action.started -= OnInteractStarted;
+            interactAction.action.canceled -= OnInteractCanceled;
+        }
         EventManager.StopListening("Level_Completed", OnLevelCompletedEvent);
     }
 
     private void OnLevelCompletedEvent(Dictionary<string, object> data)
     {
-        Debug.Log("🏛️ البوابة العملاقة تلقت إشارة بانتهاء مرحلة! يتم التحقق من حالة الفتح...");
         CheckGateStatus(); 
     }
 
     public void CheckGateStatus()
     {
-        int currentProgress = 0;
-        if (SaveManager.Instance != null)
-        {
-            currentProgress = SaveManager.Instance.currentGateProgress;
-        }
-        else
-        {
-            currentProgress = PlayerPrefs.GetInt("GateProgress", 0);
-        }
+        int currentProgress = SaveManager.Instance != null ? SaveManager.Instance.currentGateProgress : PlayerPrefs.GetInt("GateProgress", 0);
 
-        if (currentProgress >= levelRequiredToOpen)
-        {
-            if(portalGlowObject) portalGlowObject.SetActive(true);
-            if(centerSpotLightObject) centerSpotLightObject.SetActive(true);
+        isFullyOpen = (currentProgress >= levelRequiredToOpen);
 
-            isFullyOpen = true; 
-            
-            if (ambientLoopSound != null && !ambientLoopSound.isPlaying) ambientLoopSound.Play();
-        }
-        else
-        {
-            if(portalGlowObject) portalGlowObject.SetActive(false);
-            if(centerSpotLightObject) centerSpotLightObject.SetActive(false);
-
-            isFullyOpen = false; 
-            
-            if (ambientLoopSound != null) ambientLoopSound.Stop();
-        }
+        if(portalGlowObject) portalGlowObject.SetActive(isFullyOpen);
+        if(centerSpotLightObject) centerSpotLightObject.SetActive(isFullyOpen);
+        
+        if (isFullyOpen && ambientLoopSound != null && !ambientLoopSound.isPlaying) ambientLoopSound.Play();
+        else if (!isFullyOpen && ambientLoopSound != null) ambientLoopSound.Stop();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -101,38 +89,59 @@ public class MainGateController : MonoBehaviour
         if (other.CompareTag("Player") && !isTransitioning && isFullyOpen)
         {
             isPlayerInRange = true;
-            // 🔥 التعديل هنا: نأمر الأيقونة بالظهور
             if (interactPrompt != null) interactPrompt.ShowPrompt();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player") && !isTransitioning)
+        if (other.CompareTag("Player"))
         {
             isPlayerInRange = false;
-            // 🔥 التعديل هنا: نأمر الأيقونة بالاختفاء
             if (interactPrompt != null) interactPrompt.HidePrompt();
+            
+            if (fillCoroutine != null) StopCoroutine(fillCoroutine);
+            if (loadingCircle != null) loadingCircle.fillAmount = 0f;
         }
     }
 
-    private void OnInteractPressed(InputAction.CallbackContext context)
+    private void OnInteractStarted(InputAction.CallbackContext context)
     {
         if (isPlayerInRange && !isTransitioning && isFullyOpen)
         {
-            StartCoroutine(TransitionRoutine());
+            if (fillCoroutine != null) StopCoroutine(fillCoroutine);
+            fillCoroutine = StartCoroutine(FillCircleRoutine());
         }
+    }
+
+    private void OnInteractCanceled(InputAction.CallbackContext context)
+    {
+        if (fillCoroutine != null) StopCoroutine(fillCoroutine);
+        if (loadingCircle != null) loadingCircle.fillAmount = 0f;
+    }
+
+    IEnumerator FillCircleRoutine()
+    {
+        float timer = 0f;
+        while (timer < holdDuration)
+        {
+            timer += Time.deltaTime;
+            if (loadingCircle != null) loadingCircle.fillAmount = timer / holdDuration;
+            yield return null;
+        }
+        
+        if (loadingCircle != null) loadingCircle.fillAmount = 1f;
+        StartCoroutine(TransitionRoutine());
     }
 
     IEnumerator TransitionRoutine()
     {
         isTransitioning = true;
-        
-        // 🔥 التعديل هنا: إخفاء الأيقونة فوراً عند بدء الانتقال
         if (interactPrompt != null) interactPrompt.ForceHide();
+        if (loadingCircle != null) loadingCircle.gameObject.SetActive(false);
         if (teleportSound != null) teleportSound.Play();
 
-        PlayerStateMachine player = FindFirstObjectByType<PlayerStateMachine>();        
+        PlayerStateMachine player = FindFirstObjectByType<PlayerStateMachine>();
         if (player != null) player.enabled = false;
 
         if (whiteFade != null)
@@ -140,7 +149,6 @@ public class MainGateController : MonoBehaviour
             Image fadeImage = whiteFade.GetComponent<Image>();
             if (fadeImage != null) fadeImage.color = fadeColor;
 
-            whiteFade.alpha = 0f;
             while (whiteFade.alpha < 1f)
             {
                 whiteFade.alpha += Time.deltaTime * fadeSpeed;
@@ -149,7 +157,14 @@ public class MainGateController : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
         
-        EventManager.TriggerEvent("Telemetry_Final_Gate_Entered", null);
+        Dictionary<string, object> finalGateData = new Dictionary<string, object>
+        {
+            { "Scene", finalSceneName },
+            { "PlayerLevel", SaveManager.Instance != null ? SaveManager.Instance.currentGateProgress : 0 },
+            { "TimePlayed", Time.timeSinceLevelLoad }
+        };
+        EventManager.TriggerEvent("Telemetry_Final_Gate_Entered", finalGateData);
+
         SceneManager.LoadScene(finalSceneName);
     }
 }

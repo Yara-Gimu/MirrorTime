@@ -1,16 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Toggle))]
 public class ToggleAudio : MonoBehaviour
 {
     [Header("إعدادات الصوت")]
-    public AudioClip toggleOnSound;  // صوت التفعيل (وضع علامة الصح)
-    public AudioClip toggleOffSound; // صوت الإلغاء (إزالة علامة الصح)
+    public AudioClip toggleOnSound;  
+    public AudioClip toggleOffSound; 
 
     private AudioSource audioSource;
     private Toggle toggle;
+    private bool isInitialized = false; // 🌟 حماية التحميل
 
     void Awake()
     {
@@ -18,23 +20,25 @@ public class ToggleAudio : MonoBehaviour
         audioSource.playOnAwake = false;
 
         toggle = GetComponent<Toggle>();
-        
-        // نربط الدالة بتغير حالة المربع برمجياً
         toggle.onValueChanged.AddListener(PlayToggleSound);
     }
 
-    // هذي الدالة تشتغل تلقائياً كل ما ضغط اللاعب على المربع
+    IEnumerator Start()
+    {
+        yield return new WaitForEndOfFrame();
+        isInitialized = true;
+    }
+
     public void PlayToggleSound(bool isOn)
     {
-        // تغيير النغمة بشكل عشوائي بسيط لزيادة الواقعية
+        if (!isInitialized) return; // منع الإزعاج عند بدء اللعبة
+
         audioSource.pitch = Random.Range(0.95f, 1.05f);
 
-        // إذا اللاعب حط صح
         if (isOn && toggleOnSound != null)
         {
             audioSource.PlayOneShot(toggleOnSound);
         }
-        // إذا اللاعب شال الصح
         else if (!isOn && toggleOffSound != null)
         {
             audioSource.PlayOneShot(toggleOffSound);

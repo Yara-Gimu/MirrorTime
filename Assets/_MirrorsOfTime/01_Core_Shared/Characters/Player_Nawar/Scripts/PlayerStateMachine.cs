@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables; // 🌟 تمت إضافة هذي المكتبة الخاصة بالتايم لاين
+using UnityEngine.Playables; 
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerStateMachine : MonoBehaviour
@@ -8,38 +8,49 @@ public class PlayerStateMachine : MonoBehaviour
     [Header("--- إعدادات نوار الأساسية ---")]
     public float walkSpeed = 3f;
     public float runSpeed = 6f;
-    public float proneSpeed = 1.5f; // تمت إضافة سرعة الزحف
     public float rotationSmoothTime = 0.1f;
     public float jumpHeight = 1.5f;
     public float gravity = -9.81f;
     public float fallMultiplier = 2.5f;
 
     [Header("--- ميكانيكا القفز الاحترافية ---")]
-    [Tooltip("زمن الذئب: الوقت المسموح للقفز بعد مغادرة الحافة (بالثواني)")]
     public float coyoteTime = 0.15f; 
     public float coyoteTimeCounter;
 
     [Header("--- المراجع ---")]
-    public PlayableDirector director; // 🌟 تمت إضافة متغير التايم لاين هنا
+    public PlayableDirector director; 
     public Transform mainCamera;
     public Animator animator;
     public CharacterController Controller { get; private set; }
 
-    // --- متغيرات لتخزين مدخلات اللاعب ---
     public Vector2 CurrentMovementInput { get; private set; }
     public bool IsRunPressed { get; private set; }
     public bool IsJumpPressed { get; set; } 
-    public bool IsPronePressed { get; set; } // تمت الإضافة لمعرفة هل اللاعب ضغط زحف أم لا
     
     public float CurrentVelocityY { get; set; }
     public float TurnSmoothVelocity;
 
-    // متغيرات لتخزين حجم اللاعب الأصلي عشان نرجعه بعد الزحف
     public float originalHeight;
     public Vector3 originalCenter;
 
-    // --- نظام الحالات (State Machine) ---
+    // 🌟 الترقية المعمارية (AAA Caching): تعريف الحالات مرة واحدة فقط!
+    public PlayerIdleState idleState;
+    public PlayerMoveState moveState;
+    public PlayerJumpState jumpState;
+    public PlayerFallState fallState;
+    public PlayerCutsceneState cutsceneState;
+
     private PlayerBaseState currentState;
+
+    void Awake()
+    {
+        // 🌟 إنشاء الحالات في الذاكرة مرة واحدة فقط
+        idleState = new PlayerIdleState(this);
+        moveState = new PlayerMoveState(this);
+        jumpState = new PlayerJumpState(this);
+        fallState = new PlayerFallState(this);
+        cutsceneState = new PlayerCutsceneState(this);
+    }
 
     void Start()
     {
@@ -52,36 +63,24 @@ public class PlayerStateMachine : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // حفظ حجم نوار الأصلي
         originalHeight = Controller.height;
         originalCenter = Controller.center;
 
-        // التعديل السحري: نوار تبدأ اللعبة في حالة "المشهد السينمائي" مسلوبة الإرادة
-        SwitchState(new PlayerCutsceneState(this));
+        // نبدأ بحالة المشهد السينمائي
+        SwitchState(cutsceneState);
     }
 
     void Update()
     {
         HandleCoyoteTime();
-
-        if (currentState != null)
-        {
-            currentState.UpdateState();
-        }
-
+        if (currentState != null) currentState.UpdateState();
         UpdateAnimations();
     }
 
     private void HandleCoyoteTime()
     {
-        if (Controller.isGrounded)
-        {
-            coyoteTimeCounter = coyoteTime;
-        }
-        else
-        {
-            coyoteTimeCounter -= Time.deltaTime;
-        }
+        if (Controller.isGrounded) coyoteTimeCounter = coyoteTime;
+        else coyoteTimeCounter -= Time.deltaTime;
     }
 
     private void UpdateAnimations()
@@ -100,42 +99,17 @@ public class PlayerStateMachine : MonoBehaviour
         currentState.EnterState();
     }
 
-    // --- دالة إنهاء المشهد السينمائي (تستدعى من التايم لاين) ---
     public void EndCutscene()
     {
-        // نرجع التحكم للاعب بمجرد انتهاء الكات سين
-        SwitchState(new PlayerIdleState(this));
+        SwitchState(idleState);
     }
 
-    // --- استقبال المدخلات (Input System) ---
-    public void OnMove(InputValue value)
-    {
-        CurrentMovementInput = value.Get<Vector2>();
-    }
-
-    public void OnJump(InputValue value)
-    {
-        IsJumpPressed = value.isPressed;
-    }
-
-    public void OnSprint(InputValue value)
-    {
-        IsRunPressed = value.isPressed;
-    }
-
+    // --- استقبال المدخلات ---
+    public void OnMove(InputValue value) { CurrentMovementInput = value.Get<Vector2>(); }
+    public void OnJump(InputValue value) { IsJumpPressed = value.isPressed; }
+    public void OnSprint(InputValue value) { IsRunPressed = value.isPressed; }
     public void OnInteract(InputValue value)
     {
-        if (value.isPressed && animator != null)
-        {
-            animator.SetTrigger("Interact");
-        }
-    }
-
-    public void OnProne(InputValue value)
-    {        
-        if (value.isPressed)
-        {
-            IsPronePressed = !IsPronePressed; // ضغطة للنزول وضغطة للنهوض
-        }
+        if (value.isPressed && animator != null) animator.SetTrigger("Interact");
     }
 }

@@ -159,6 +159,88 @@ MonoBehaviour:
     m_Key: UI_Settings_ShowSubtitles
     m_Metadata:
       m_Items: []
+  - m_Id: 58575609576673280
+    m_Key: INPUT_MOVE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575636638322688
+    m_Key: INPUT_SPRINT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575656003424256
+    m_Key: INPUT_LookAround
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61107432533905408
+    m_Key: 'UI_Action_Translate
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68012090896535552
+    m_Key: UI_SETTINGS_RESOLUTION
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68017059213201408
+    m_Key: UI_SETTINGS_CAMERA_SENSITIVITY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68020490925625344
+    m_Key: UI_SETTINGS_FOV
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68205953036701696
+    m_Key: UI_SETTINGS_MOTION_BLUR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68207681672957952
+    m_Key: UI_SETTINGS_VSYNC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209046180712448
+    m_Key: UI_SETTINGS_CAMERA_SHAKE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209076614582272
+    m_Key: UI_SETTINGS_VIBRATION
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68282311716753408
+    m_Key: UI_SETTINGS_VOICE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287250497130496
+    m_Key: UI_SETTINGS_ANTIALIASING
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287584309202944
+    m_Key: UI_SETTINGS_SHADOWS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287855429013504
+    m_Key: UI_SETTINGS_OFF
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288037654745088
+    m_Key: UI_SETTINGS_SHADOWS_HARD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288210690756608
+    m_Key: UI_SETTINGS_SHADOWS_ALL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290280344899584
+    m_Key: UI_SETTINGS_X2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290283205414912
+    m_Key: UI_SETTINGS_X4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290285940101120
+    m_Key: UI_SETTINGS_X8
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

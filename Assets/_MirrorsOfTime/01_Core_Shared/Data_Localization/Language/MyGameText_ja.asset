@@ -162,6 +162,86 @@ MonoBehaviour:
     m_Localized: "\u5B57\u5E55\u3092\u8868\u793A"
     m_Metadata:
       m_Items: []
+  - m_Id: 58575609576673280
+    m_Localized: "\u79FB\u52D5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575636638322688
+    m_Localized: "\u30C0\u30C3\u30B7\u30E5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575656003424256
+    m_Localized: "\u898B\u56DE\u3059"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61107432533905408
+    m_Localized: "\u7FFB\u8A33"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68012090896535552
+    m_Localized: "\u89E3\u50CF\u5EA6"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68017059213201408
+    m_Localized: "\u30AB\u30E1\u30E9\u611F\u5EA6"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68020490925625344
+    m_Localized: "\u8996\u91CE\u89D2 (FOV)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68205953036701696
+    m_Localized: "\u30E2\u30FC\u30B7\u30E7\u30F3\u30D6\u30E9\u30FC"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68207681672957952
+    m_Localized: "\u5782\u76F4\u540C\u671F (VSync)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209046180712448
+    m_Localized: "\u30AB\u30E1\u30E9\u306E\u63FA\u308C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209076614582272
+    m_Localized: "\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9\u30FC\u306E\u632F\u52D5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68282311716753408
+    m_Localized: "\u30DC\u30A4\u30B9\u97F3\u91CF"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287250497130496
+    m_Localized: "\u30A2\u30F3\u30C1\u30A8\u30A4\u30EA\u30A2\u30B9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287584309202944
+    m_Localized: "\u5F71\u306E\u54C1\u8CEA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287855429013504
+    m_Localized: "\u30AA\u30D5"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288037654745088
+    m_Localized: "\u30CF\u30FC\u30C9\u306E\u307F"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288210690756608
+    m_Localized: "\u3059\u3079\u3066"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290285940101120
+    m_Localized: 8x
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290283205414912
+    m_Localized: 4x
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290280344899584
+    m_Localized: 2x
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

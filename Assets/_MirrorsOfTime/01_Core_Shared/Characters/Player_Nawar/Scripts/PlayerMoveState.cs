@@ -6,46 +6,31 @@ public class PlayerMoveState : PlayerBaseState
 
     public override void EnterState() 
     { 
-        // 🌟 الإضافة السحرية (AAA): 
-        // أول ما اللاعب يلمس يد التحكم ونوار تبدأ تمشي لأول مرة، نعطيه التلميح!
-        // وبما إننا حاطين شرط (hasHintPlayed) في الـ Manager، ماراح يزعجه مرة ثانية.
-        if (PauseMenuManager.Instance != null)
-        {
-            PauseMenuManager.Instance.TriggerPauseHint();
-        }
+        if (PauseMenuManager.Instance != null) PauseMenuManager.Instance.TriggerPauseHint();
     }
 
-    public override void UpdateState()
+public override void UpdateState()
     {
-        // 🪂 هل نوار لم تعد تلمس الأرض؟ اذهب لحالة السقوط!
         if (!ctx.Controller.isGrounded)
         {
-            ctx.SwitchState(new PlayerFallState(ctx));
-            return;
-        }
-
-        // 👇 الانتقال لحالة الزحف حتى لو كانت تمشي
-        if (ctx.IsPronePressed)
-        {
-            ctx.SwitchState(new PlayerProneState(ctx));
+            ctx.SwitchState(ctx.fallState);
             return;
         }
 
         ApplyGravity();
         MoveNawar();
 
-        // 🦘 هل ضغط اللاعب زر القفز وكان الـ Coyote Time مسموح؟
         if (ctx.IsJumpPressed && ctx.coyoteTimeCounter > 0f)
         {
             ctx.IsJumpPressed = false; 
-            ctx.SwitchState(new PlayerJumpState(ctx));
+            ctx.CurrentVelocityY = 0f; // 🌟 الإصلاح: تصفير السرعة العمودية لمنع التعليق
+            ctx.SwitchState(ctx.jumpState);
             return; 
         }
 
-        // 🛑 هل شال يده عن الكيبورد/القير؟
         if (ctx.CurrentMovementInput.magnitude <= 0.1f)
         {
-            ctx.SwitchState(new PlayerIdleState(ctx));
+            ctx.SwitchState(ctx.idleState);
         }
     }
 
@@ -53,9 +38,7 @@ public class PlayerMoveState : PlayerBaseState
 
     private void ApplyGravity()
     {
-        if (ctx.Controller.isGrounded && ctx.CurrentVelocityY < 0)
-            ctx.CurrentVelocityY = -2f;
-
+        if (ctx.Controller.isGrounded && ctx.CurrentVelocityY < 0) ctx.CurrentVelocityY = -2f;
         ctx.CurrentVelocityY += ctx.gravity * Time.deltaTime;
     }
 
@@ -75,10 +58,7 @@ public class PlayerMoveState : PlayerBaseState
             Vector3 finalVelocity = (moveDir.normalized * currentSpeed) + new Vector3(0, ctx.CurrentVelocityY, 0);
             ctx.Controller.Move(finalVelocity * Time.deltaTime);
 
-            if (ctx.animator != null)
-            {
-                ctx.animator.SetFloat("Speed", ctx.IsRunPressed ? 1f : 0.5f);
-            }
+            if (ctx.animator != null) ctx.animator.SetFloat("Speed", ctx.IsRunPressed ? 1f : 0.5f);
         }
     }
 }

@@ -24,38 +24,30 @@ public class FadeManager : MonoBehaviour
         }
     }
 
-    // 1. الاشتراك في حدث تحميل المشهد أول ما يتفعل السكريبت
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    // 2. فك الاشتراك لتجنب أخطاء الذاكرة (خطوة هندسية مهمة جداً)
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // 3. هذه الدالة ستعمل تلقائياً وبشكل سحري في بداية كل مشهد جديد
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // إذا ضاعت الستارة لأي سبب، يبحث عنها مجدداً (كما طلب الدكتور)
         if (blackScreen == null)
         {
             blackScreen = GetComponentInChildren<Image>(true);
         }
-
-        // تشغيل التلاشي (فتح الستارة) فور الدخول للمشهد
         StartCoroutine(FadeIn());
     }
 
-    // 1. دالة الانتقال بين المشاهد (للمراحل المستقبلية)
     public void LoadSceneSmoothly(string sceneName)
     {
         StartCoroutine(FadeOutAndLoad(sceneName));
     }
 
-    // 2. دالة لظهور الكوميكس أو القوائم داخل نفس المشهد بنعومة! ✨
     public void ShowUIWithFade(GameObject uiToEnable, GameObject uiToDisable = null)
     {
         StartCoroutine(FadeOutShowUIFadeIn(uiToEnable, uiToDisable));
@@ -63,7 +55,7 @@ public class FadeManager : MonoBehaviour
 
     IEnumerator FadeIn()
     {
-        if (blackScreen == null) yield break; // حماية إضافية
+        if (blackScreen == null) yield break; 
 
         blackScreen.gameObject.SetActive(true);
         Color c = blackScreen.color;
@@ -96,14 +88,9 @@ public class FadeManager : MonoBehaviour
             }
         }
 
-        // الانتقال للمشهد الجديد
         SceneManager.LoadScene(sceneName);
-        
-        // ملاحظة: تم حذف StartCoroutine(FadeIn) من هنا، لأن دالة OnSceneLoaded 
-        // ستتكفل بفتح الستارة تلقائياً أول ما يخلص تحميل المشهد الجديد!
     }
 
-    // الدالة السحرية لظهور الكوميكس
     IEnumerator FadeOutShowUIFadeIn(GameObject uiToEnable, GameObject uiToDisable)
     {
         if (blackScreen != null)
@@ -112,7 +99,6 @@ public class FadeManager : MonoBehaviour
             Color c = blackScreen.color;
             c.a = 0f; 
 
-            // تظليم الشاشة أولاً
             while (blackScreen.color.a < 1f)
             {
                 c.a += Time.deltaTime * fadeSpeed;
@@ -121,11 +107,9 @@ public class FadeManager : MonoBehaviour
             }
         }
 
-        // تفعيل الكوميكس وإخفاء زر حرف E واللاعب في الظلام
         if (uiToEnable != null) uiToEnable.SetActive(true);
         if (uiToDisable != null) uiToDisable.SetActive(false);
 
-        // فتح الشاشة مجدداً على الكوميكس!
         if (blackScreen != null)
         {
             Color c = blackScreen.color;

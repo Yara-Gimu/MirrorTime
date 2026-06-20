@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class FallReset : MonoBehaviour
 {
@@ -9,8 +10,12 @@ public class FallReset : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // 🏗️ الترقية المعمارية: إرسال إشارة لمدير البيانات لتسجيل مكان السقوط (Heatmap)
-            // EventManager.Trigger("Telemetry_Player_Fell", other.transform.position);
+            // 🌟 إرسال البيانات بشكل صحيح لدراسة تحركات اللاعب!
+            Dictionary<string, object> fallData = new Dictionary<string, object>
+            {
+                { "FallPosition", other.transform.position }
+            };
+            EventManager.TriggerEvent("Telemetry_Player_Fell", fallData);
 
             CharacterController cc = other.GetComponent<CharacterController>();
             

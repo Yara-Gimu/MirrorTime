@@ -165,6 +165,86 @@ MonoBehaviour:
     m_Localized: Afficher les sous-titres
     m_Metadata:
       m_Items: []
+  - m_Id: 58575609576673280
+    m_Localized: "D\xE9placer"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575636638322688
+    m_Localized: Courir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575656003424256
+    m_Localized: Regarder autour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61107432533905408
+    m_Localized: Traduire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68012090896535552
+    m_Localized: "R\xE9solution"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68017059213201408
+    m_Localized: "Sensibilit\xE9 de la cam\xE9ra"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68020490925625344
+    m_Localized: Champ de vision (FOV)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68205953036701696
+    m_Localized: Flou de mouvement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68207681672957952
+    m_Localized: Synchronisation verticale (VSync)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209046180712448
+    m_Localized: "Secousse de la cam\xE9ra"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209076614582272
+    m_Localized: Vibration de la manette
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68282311716753408
+    m_Localized: Volume des Voix
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287250497130496
+    m_Localized: "Anticr\xE9nelage"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287584309202944
+    m_Localized: "Qualit\xE9 des ombres"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287855429013504
+    m_Localized: "D\xE9sactiv\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288037654745088
+    m_Localized: Dures
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288210690756608
+    m_Localized: Toutes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290285940101120
+    m_Localized: 8x
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290283205414912
+    m_Localized: 4x
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290280344899584
+    m_Localized: 2x
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

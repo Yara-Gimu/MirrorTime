@@ -1,68 +1,108 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Localization.Settings;
+using UnityEngine.Localization;
+using UnityEngine.EventSystems; 
+using UnityEngine.InputSystem; // 🌟 تم إضافة مكتبة الإدخال
+using System.Collections; 
 
 public class TabManager : MonoBehaviour
 {
     [Header("مدير الصفحات")]
     public GameObject[] pages; 
     public TMP_Text titleText; 
-    public string[] titleLocalizationKeys; 
+    
+    [Header("أزرار التبويبات (ضروري لربط اليد)")]
+    public Button[] tabButtons; 
+
+    [Header("عناوين الصفحات المترجمة")]
+    public LocalizedString[] localizedTitles; 
 
     [Header("نصوص التبويبات (TMP)")]
-    public TMP_Text[] tabTexts; // اسحبي هنا نصوص الأزرار (Text TMP اللي داخل Btn_Audio وغيرها)
+    public TMP_Text[] tabTexts; 
 
-    [Header("ألوان التبويبات")]
-    public Color activeColor = new Color32(232, 224, 213, 255); // لون ذهبي مشرق
-    public Color inactiveColor = new Color32(150, 150, 150, 200); // رمادي باهت
-    public Color activeGlowColor = new Color32(232, 224, 213, 150); // توهج ذهبي
+    [Header("إعدادات الإدخال الحديث للتبديل (L1/R1 أو الأسهم)")]
+    public InputActionReference nextTabAction; // 🌟 اربطي هنا زر الانتقال للتالي (مثل R1)
+    public InputActionReference prevTabAction; // 🌟 اربطي هنا زر الانتقال السابق (مثل L1)
 
-    void Start()
+    [Header("إعدادات الألوان والتأثير")]
+    public Color activeColor = new Color32(232, 224, 213, 255); 
+    public Color inactiveColor = new Color32(150, 150, 150, 200); 
+    public Color activeGlowColor = new Color32(232, 224, 213, 150); 
+
+    private int currentTab = 0;
+
+    void OnEnable()
     {
-        OpenTab(0); // يفتح أول صفحة ويخلي زرها مضيء ديفولت
+        if (nextTabAction != null) { nextTabAction.action.Enable(); nextTabAction.action.performed += OnNextTab; }
+        if (prevTabAction != null) { prevTabAction.action.Enable(); prevTabAction.action.performed += OnPrevTab; }
+    }
+
+    void OnDisable()
+    {
+        if (nextTabAction != null) nextTabAction.action.performed -= OnNextTab;
+        if (prevTabAction != null) prevTabAction.action.performed -= OnPrevTab;
+    }
+
+    private void OnNextTab(InputAction.CallbackContext context)
+    {
+        currentTab = (currentTab + 1) % pages.Length;
+        OpenTab(currentTab);
+    }
+
+    private void OnPrevTab(InputAction.CallbackContext context)
+    {
+        currentTab--;
+        if (currentTab < 0) currentTab = pages.Length - 1;
+        OpenTab(currentTab);
     }
 
     public void OpenTab(int tabIndex)
     {
-        // 1. فتح وإغلاق الصفحات
+        currentTab = tabIndex;
+        StartCoroutine(OpenTabRoutine(tabIndex));
+    }
+
+    private IEnumerator OpenTabRoutine(int tabIndex)
+    {
         for (int i = 0; i < pages.Length; i++)
         {
             if (pages[i] != null) pages[i].SetActive(i == tabIndex);
         }
 
-        // 2. ✨ التحكم في إضاءة الأزرار الثابتة (التأثير البصري)
         for (int i = 0; i < tabTexts.Length; i++)
         {
             if (tabTexts[i] != null)
             {
                 Material textMat = tabTexts[i].fontMaterial;
+                bool isActive = (i == tabIndex);
                 
-                if (i == tabIndex) // الزر المختار (نشط)
+                tabTexts[i].color = isActive ? activeColor : inactiveColor;
+                
+                if (isActive) 
                 {
-                    tabTexts[i].color = activeColor;
                     textMat.EnableKeyword("GLOW_ON");
-                    textMat.SetColor("_GlowColor", activeGlowColor);
-                    textMat.SetFloat("_GlowPower", 0.5f);
-                    tabTexts[i].transform.localScale = Vector3.one * 1.05f; // تكبير بسيط
-                }
-                else // الأزرار غير النشطة
+                    tabTexts[i].transform.localScale = Vector3.one * 1.05f; 
+                } 
+                else 
                 {
-                    tabTexts[i].color = inactiveColor;
                     textMat.DisableKeyword("GLOW_ON");
-                    textMat.SetFloat("_GlowPower", 0f);
-                    tabTexts[i].transform.localScale = Vector3.one; // حجم طبيعي
+                    tabTexts[i].transform.localScale = Vector3.one; 
                 }
             }
         }
 
-        // 3. تغيير العنوان الرئيسي
-        if (titleText != null && titleLocalizationKeys.Length > tabIndex)
+        yield return new WaitForEndOfFrame();
+
+        if (tabButtons.Length > tabIndex && tabButtons[tabIndex] != null)
         {
-            LocalizationSettings.InitializationOperation.Completed += (op) => {
-                string localizedTitle = LocalizationSettings.StringDatabase.GetLocalizedString("MyGameText", titleLocalizationKeys[tabIndex]);
-                titleText.text = localizedTitle;
-            };
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(tabButtons[tabIndex].gameObject);
+        }
+
+        if (titleText != null && localizedTitles.Length > tabIndex)
+        {
+            titleText.text = localizedTitles[tabIndex].GetLocalizedString();
         }
     }
 }

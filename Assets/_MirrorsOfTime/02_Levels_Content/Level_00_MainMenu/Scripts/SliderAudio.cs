@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections; // ضروري للـ Coroutine
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(Slider))]
 public class SliderAudio : MonoBehaviour
 {
     [Header("إعدادات الصوت")]
-    public AudioClip tickSound; // ضعي هنا صوت التكتكة أو الاحتكاك الحجري
+    public AudioClip tickSound; 
 
     [Header("إعدادات التوقيت")]
     [Tooltip("المدة الزمنية بين كل تكتكة وأخرى (لمنع تداخل الأصوات)")]
@@ -15,30 +16,36 @@ public class SliderAudio : MonoBehaviour
     private AudioSource audioSource;
     private Slider slider;
     private float nextTickTime = 0f;
+    
+    // 🌟 حماية ضد تشغيل الصوت وقت تحميل الإعدادات المحفوظة
+    private bool isInitialized = false; 
 
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
         slider = GetComponent<Slider>();
 
-        // نمنع تشغيل الصوت تلقائياً عند بدء اللعبة
         audioSource.playOnAwake = false;
-
-        // السحر هنا: نربط دالة الصوت بحركة السلايدر برمجياً بدون ما نتدخل في الانسبكتور
         slider.onValueChanged.AddListener(PlayTickSound);
     }
 
-    // هذه الدالة تشتغل كل ما تحرك السلايدر
+    IEnumerator Start()
+    {
+        // 🌟 ننتظر نهاية الفريم الأول حتى تنتهي كل السكربتات من قراءة وتطبيق الإعدادات
+        yield return new WaitForEndOfFrame();
+        isInitialized = true; 
+    }
+
     public void PlayTickSound(float value)
     {
-        // نتحقق إذا كان الوقت الحالي تجاوز وقت "الراحة" المسموح به
+        // إذا اللعبة لسه تحمل الإعدادات، لا تشغل الصوت!
+        if (!isInitialized) return;
+
         if (tickSound != null && Time.time >= nextTickTime)
         {
-            // تغيير النغمة بشكل عشوائي بسيط لزيادة الواقعية
             audioSource.pitch = Random.Range(0.95f, 1.05f); 
             audioSource.PlayOneShot(tickSound);
             
-            // نحدث وقت التكتكة القادمة
             nextTickTime = Time.time + tickCooldown;
         }
     }

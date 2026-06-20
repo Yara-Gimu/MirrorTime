@@ -1,25 +1,53 @@
 using UnityEngine;
+using System.Collections.Generic;
+using Esper.ESave; 
 
+[System.Serializable]
+public class GameData
+{
+    public int currentGateProgress = 0; 
+    public bool hasPlayedBefore = false;
+    public bool hasSeenHubIntro = false;
+    
+    public string currentSceneName = "Prologue_Scene";
+    public float playerPosX = 0f;
+    public float playerPosY = 0f;
+    public float playerPosZ = 0f;
+
+    public List<string> collectedTools = new List<string>(); 
+}
+
+[RequireComponent(typeof(SaveFileSetup))] 
 public class SaveManager : MonoBehaviour
 {
-    // 👑 النمط المنفرد (Singleton) - يمكن لأي كود في اللعبة التحدث معه مباشرة
     public static SaveManager Instance { get; private set; }
 
-    [Header("--- بيانات اللاعب الحالية ---")]
-    public int currentGateProgress = 0; // 0=العلا، 1=ثاج، 2=الفاو، 3=تاروت
-    public bool hasPlayedBefore = false;
-    
-    // 🎬 المتغير الجديد لتتبع المشهد السينمائي في غرفة البوابات
-    public bool hasSeenHubIntro = false; 
+    [Header("--- بيانات اللعبة ---")]
+    public GameData gameData = new GameData();
+
+    private SaveFile saveFile; 
+
+    public int currentGateProgress 
+    { 
+        get { return gameData.currentGateProgress; } 
+        set { gameData.currentGateProgress = value; } 
+    }
+
+    public bool hasSeenHubIntro 
+    { 
+        get { return gameData.hasSeenHubIntro; } 
+        set { gameData.hasSeenHubIntro = value; } 
+    }
 
     void Awake()
     {
-        // إذا كان هناك مدير حفظ آخر، دمره. نحن نحتاج واحداً فقط!
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // لا تدمره عند تغيير المشاهد
-            LoadGame(); // أول ما تشتغل اللعبة، اقرأ البيانات
+            DontDestroyOnLoad(gameObject);
+            
+            saveFile = GetComponent<SaveFileSetup>().GetSaveFile();
+            LoadGame(); 
         }
         else
         {
@@ -27,57 +55,51 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    // --- دوال الحفظ والتحميل المركزية ---
-
-    public void SaveGame()
+    public void SaveGame(Vector3 playerPosition, string sceneName)
     {
-        PlayerPrefs.SetInt("GateProgress", currentGateProgress);
-        PlayerPrefs.SetInt("HasPlayedBefore", hasPlayedBefore ? 1 : 0);
-        
-        // 💾 حفظ حالة المشهد السينمائي
-        PlayerPrefs.SetInt("HasSeenHubIntro", hasSeenHubIntro ? 1 : 0); 
-        
-        PlayerPrefs.Save();
+        gameData.playerPosX = playerPosition.x;
+        gameData.playerPosY = playerPosition.y;
+        gameData.playerPosZ = playerPosition.z;
+        gameData.currentSceneName = sceneName;
+
+        saveFile.AddOrUpdateData("Nawar_Progress", gameData);
+        saveFile.Save(); 
         
         Debug.Log("💾 [SaveManager] تم حفظ تقدم نوار بنجاح!");
     }
 
     public void LoadGame()
     {
-        currentGateProgress = PlayerPrefs.GetInt("GateProgress", 0);
-        hasPlayedBefore = PlayerPrefs.GetInt("HasPlayedBefore", 0) == 1;
-        
-        // 📂 قراءة حالة المشهد السينمائي
-        hasSeenHubIntro = PlayerPrefs.GetInt("HasSeenHubIntro", 0) == 1; 
-        
-        Debug.Log("📂 [SaveManager] تم تحميل ملف اللعبة. المرحلة الحالية: " + currentGateProgress);
-    }
+        saveFile.Load();
 
-    // --- دوال مساعدة للواجهات والبوابات ---
+        if (saveFile.HasData("Nawar_Progress"))
+        {
+            gameData = saveFile.GetData<GameData>("Nawar_Progress");
+            Debug.Log("📂 [SaveManager] تم تحميل اللعبة بنجاح.");
+        }
+        else
+        {
+            Debug.Log("📄 [SaveManager] لا يوجد ملف حفظ سابق. هذه رحلة جديدة.");
+        }
+    }
 
     public bool HasSaveData()
     {
-        return hasPlayedBefore;
+        return saveFile != null && saveFile.HasData("Nawar_Progress");
     }
 
     public void StartNewGame()
     {
-        currentGateProgress = 0;
-        hasPlayedBefore = true;
+        gameData = new GameData();
+        gameData.hasPlayedBefore = true;
         
-        // 🔄 إعادة تعيين المشهد السينمائي ليعمل مرة أخرى في اللعبة الجديدة
-        hasSeenHubIntro = false; 
-        
-        SaveGame();
-        
-        Debug.Log("✨ [SaveManager] تم تصفير البيانات وبدء رحلة جديدة!");
+        SaveGame(Vector3.zero, "Prologue_Scene");
+        Debug.Log("✨ [SaveManager] تم بدء رحلة جديدة!");
     }
 
     public void UnlockNextGate()
     {
-        currentGateProgress++;
-        SaveGame();
-        
-        // لاحقاً سنرسل إشارة هنا لمدير البيانات (Telemetry) لتسجيل فتح البوابة
+        gameData.currentGateProgress++;
+        SaveGame(new Vector3(gameData.playerPosX, gameData.playerPosY, gameData.playerPosZ), gameData.currentSceneName);
     }
 }

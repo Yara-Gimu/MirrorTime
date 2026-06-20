@@ -1,15 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIIconManager : MonoBehaviour
 {
-    [Header("--- Main Menu Buttons (إعدادات أزرار القائمة) ---")]
-    public GameObject continueButton; 
-    public GameObject newGameButton;  
-
-    [Header("--- UI Images (صور الأزرار في الشاشة) ---")]
+    [Header("--- صور الأيقونات في الشاشة ---")]
     public Image selectIcon; 
     public Image backIcon;   
 
@@ -25,29 +20,30 @@ public class UIIconManager : MonoBehaviour
     public Sprite psSelect; 
     public Sprite psBack;   
 
+    private PlayerInput playerInput;
+
     void Start()
     {
-       
-        bool hasSaveFile = SaveManager.Instance.HasSaveData();
-        EventSystem.current.SetSelectedGameObject(null);
-
-        if (hasSaveFile)
+        // 🌟 الإصلاح: مسحنا كود التركيز (Focus) من هنا لتجنب التضارب مع MainMenuManager
+        
+        // جلب أداة التحكم الحالية وتحديث الأيقونات فور تشغيل اللعبة
+        playerInput = FindFirstObjectByType<PlayerInput>();
+        if (playerInput != null)
         {
-            continueButton.SetActive(true); 
-            EventSystem.current.SetSelectedGameObject(continueButton); 
-        }
-        else
-        {
-            continueButton.SetActive(false); 
-            EventSystem.current.SetSelectedGameObject(newGameButton); 
+            UpdateIcons(playerInput.currentControlScheme);
         }
     }
 
-    public void OnControlsChanged(PlayerInput playerInput)
+    public void OnControlsChanged(PlayerInput pi)
     {
-        string currentDevice = playerInput.currentControlScheme;
+        if (pi != null) UpdateIcons(pi.currentControlScheme);
+    }
 
-        if (currentDevice == "Keyboard&Mouse")
+    private void UpdateIcons(string currentDevice)
+    {
+        if (selectIcon == null || backIcon == null) return;
+
+        if (currentDevice == "Keyboard&Mouse" || currentDevice == "Keyboard")
         {
             selectIcon.sprite = kbSelect;
             backIcon.sprite = kbBack;

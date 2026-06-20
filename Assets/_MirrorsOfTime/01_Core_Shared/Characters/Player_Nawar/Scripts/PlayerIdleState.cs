@@ -11,44 +11,32 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void UpdateState()
     {
-        // 🪂 هل نوار لم تعد تلمس الأرض؟ اذهب لحالة السقوط!
         if (!ctx.Controller.isGrounded)
         {
-            ctx.SwitchState(new PlayerFallState(ctx));
-            return;
-        }
-
-        // 👇 الانتقال لحالة الزحف
-        if (ctx.IsPronePressed)
-        {
-            ctx.SwitchState(new PlayerProneState(ctx));
+            ctx.SwitchState(ctx.fallState); 
             return;
         }
 
         ApplyGravity();
 
-        // 🦘 هل ضغط اللاعب زر القفز وكان الـ Coyote Time مسموح؟
         if (ctx.IsJumpPressed && ctx.coyoteTimeCounter > 0f)
         {
             ctx.IsJumpPressed = false; 
-            ctx.SwitchState(new PlayerJumpState(ctx));
+            ctx.CurrentVelocityY = 0f; // 🌟 الإصلاح: تصفير السرعة العمودية لمنع التعليق
+            ctx.SwitchState(ctx.jumpState);
             return; 
         }
 
-        // 🏃 هل ضغط أزرار الحركة؟
         if (ctx.CurrentMovementInput.magnitude > 0.1f)
         {
-            ctx.SwitchState(new PlayerMoveState(ctx));
+            ctx.SwitchState(ctx.moveState);
         }
     }
-
     public override void ExitState() { }
 
     private void ApplyGravity()
     {
-        if (ctx.Controller.isGrounded && ctx.CurrentVelocityY < 0)
-            ctx.CurrentVelocityY = -2f;
-
+        if (ctx.Controller.isGrounded && ctx.CurrentVelocityY < 0) ctx.CurrentVelocityY = -2f;
         ctx.CurrentVelocityY += ctx.gravity * Time.deltaTime;
         ctx.Controller.Move(new Vector3(0, ctx.CurrentVelocityY, 0) * Time.deltaTime);
     }

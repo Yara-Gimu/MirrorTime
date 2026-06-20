@@ -18,28 +18,29 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 477120024576
-    m_Localized: I never thought my journey to Mada'in Saleh... would lead me here.
+  - m_Id: 6742177569951744
+    m_Localized: ...It was a map.
     m_Metadata:
       m_Items: []
-  - m_Id: 580698361856
-    m_Localized: All the tombs were empty.
+  - m_Id: 6742172834582528
+    m_Localized: These places still remember... and the manuscript wasn't a myth.
     m_Metadata:
       m_Items: []
-  - m_Id: 616366723072
-    m_Localized: ...except this one.
+  - m_Id: 6742149170319360
+    m_Localized: ...But the Academy was wrong.
     m_Metadata:
       m_Items: []
-  - m_Id: 636637794304
-    m_Localized: But... something was waiting for me there.
+  - m_Id: 6742115204845568
+    m_Localized: And that the manuscript was just a myth.
     m_Metadata:
       m_Items: []
-  - m_Id: 667696615424
-    m_Localized: And now...
+  - m_Id: 6742080794775552
+    m_Localized: Nawar here... For years as an archaeologist, I was told these places
+      were nothing but dead ruins...
     m_Metadata:
       m_Items: []
-  - m_Id: 689460858880
-    m_Localized: ...I am trapped here.
+  - m_Id: 6742053976395776
+    m_Localized: Audio log... Day Three.
     m_Metadata:
       m_Items: []
   - m_Id: 724982419456
@@ -68,6 +69,134 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 9435209650176
     m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688499558993920
+    m_Localized: Written from bottom to top... 'By Nata'. It's as if he passed through
+      here in a hurry, yet refused to leave without a trace.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688884822593536
+    m_Localized: Sabig bin Kharba... He clearly wanted his name remembered here.
+      Even his name radiates power, like a warning to those who follow.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7689553726001152
+    m_Localized: These words are more than just a prayer... The author was in real
+      distress. He left a plea to the heavens here, hoping someone would listen.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690195274158080
+    m_Localized: "It\u2019s heartbreaking how some emotions transcend time... Someone
+      wrote this pleading to the heavens after Salim left. We don't know if he was
+      a husband or a lover, but the sorrow is etched into every letter."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690467144749056
+    m_Localized: The drought here must have been brutal. When people beg their gods
+      for rain, it means the land has reached its breaking point.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690698187984896
+    m_Localized: Contrary to what we might expect, the author didn't hide his personal
+      desires. He carved them frankly into the stone to outlive him.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690894959562752
+    m_Localized: It seems the author abandoned nomadic life due to poverty. This
+      inscription hints that some Thamudic people migrated to cities seeking a better
+      life.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691127919595520
+    m_Localized: Another inscription documenting the exact same heartbreak... "Salim
+      left". It seems her story was well-known, or perhaps she returned to carve
+      her pain once more in a different place.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691387874168832
+    m_Localized: He was searching for luck that the passing of time couldn't shatter.
+      Sometimes a short sentence is enough to reveal the heavy burden its author
+      was carrying.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691536629354496
+    m_Localized: The inscription points to tombs built on a nearby hill. Perhaps
+      the location was chosen deliberately so they would remain visible to the living.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691845879582720
+    m_Localized: To Wahab El'... A very brief inscription. Just a proof of existence
+      for someone who wanted to tie his name to his gods, staying under their protection.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692042076540928
+    m_Localized: '''By Muqim''... This name was carved vertically here. Sometimes,
+      all a person seeks is not to be forgotten.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692306187669504
+    m_Localized: This inscription is crucial... It tells us that the people of this
+      land weren't just nomads; they practiced agriculture many centuries ago.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692505362583552
+    m_Localized: Not everything carved in stone is profound... It seems this inscription
+      is just mocking a guy named Sharaf. Humans really haven't changed much.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692696350216192
+    m_Localized: '''Hajjaj'' is an ancient, well-known name. Perhaps he was named
+      this because he was born during a pilgrimage season or a major religious event.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692927041130496
+    m_Localized: '''Greetings from Sad and Ali''... An inscription joining two brothers.
+      What''s beautiful here is that their mother, ''Nima'', is mentioned with them;
+      perhaps she held a high status or was dearly loved.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693144008282112
+    m_Localized: "'By Ra\u2019ab bin Jamam'... Just a name carved quietly. Who knows
+      what kind of life this man lived before ending up as a silent memory on this
+      wall."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693346932903936
+    m_Localized: Owning a purebred mare was a sign of status and wealth. It seems
+      the author was incredibly proud of his possession.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693554395762688
+    m_Localized: '''Jaba bin Af''... A very brief inscription. Perhaps he didn''t
+      have time to write more, or maybe his name alone was enough to be recognized
+      by everyone.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693780376473600
+    m_Localized: '''A''a stood guard''... This isn''t just a souvenir. It seems someone
+      was standing watch here, leaving this mark to document a long guard shift in
+      this desolate place.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694138188353536
+    m_Localized: '''By Basil''... He chose a name that reflects his bravery, ensuring
+      it remains etched in stone just as it was in the memories of those who knew
+      him.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694335995924480
+    m_Localized: This inscription is different... It was written for a troubled brother.
+      A simple prayer, but it reveals the depth of love between them.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694353498755072
+    m_Localized: The author of this inscription didn't ask for wealth or glory...
+      All he wanted was for his ordeal to end.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761095872860160
+    m_Localized: Read Inscription
     m_Metadata:
       m_Items: []
   references:

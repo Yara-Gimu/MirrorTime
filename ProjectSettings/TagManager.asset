@@ -10,11 +10,12 @@ TagManager:
   - Stone
   - Environment
   - Grass
+  - Wood
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Runes
   - Water
   - UI
   - 

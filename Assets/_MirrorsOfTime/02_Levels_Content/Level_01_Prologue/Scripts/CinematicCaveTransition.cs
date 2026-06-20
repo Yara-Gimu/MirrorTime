@@ -11,27 +11,26 @@ public class CinematicCaveTransition : MonoBehaviour
     [Tooltip("اسم التريقر في الأنميتر لحركة الإفاقة (مثل: Cough)")]
     public string wakeupTriggerName = "Cough"; 
 
+    [Tooltip("الوقت بالثواني لانتظار فتح الشاشة السوداء بالكامل قبل بدء أنيميشن الإفاقة")]
+    public float wakeupDelay = 4.5f; 
+
     [Header("Environment")]
     public GameObject[] floorPieces; 
-
-    [Header("Cinematic Timing (السر هنا)")]
-    [Tooltip("كم ثانية يستمر مشهد الزلزال في التايم لاين قبل ما يتم نقل اللاعب للكهف؟")]
-    public float timeBeforeTeleport = 7f; // رجعنا هذا الرقم عشان نوزن الكود مع الكاميرا
 
     [Header("Cinematic Effects")]
     public ParticleSystem heavyDust; 
 
-    [Header("Audio Theatre")]
+    [Header("Audio Theatre (إصلاحات الصوت السينمائي)")]
     public AudioSource audioSource; 
-    public AudioClip crashSound;    
-    public AudioClip coughSound;    
-    public float timeBetweenCoughs = 2.8f; 
+    public AudioClip crashSound;     
+    public AudioClip collapseSound; // 🌟 صوت الانهيار الصخري البديل لكاميرا الانسداد
+    public AudioClip coughSound;    // 🌟 صوت كحة نوار عند الإفاقة لضمان عمله
 
     private bool hasTriggered = false; 
 
-    private void OnTriggerEnter(Collider other)
+    public void StartCinematicTeleport()
     {
-        if (other.CompareTag("Player") && !hasTriggered)
+        if (!hasTriggered)
         {
             hasTriggered = true; 
             StartCoroutine(TransitionSequence());
@@ -40,11 +39,12 @@ public class CinematicCaveTransition : MonoBehaviour
 
     IEnumerator TransitionSequence()
     {
-        // 1. انتظار التايم لاين: نعطي الكاميرات الأولى وقتها تخلص مشهدها (الزلزال مثلاً)
-        yield return new WaitForSeconds(timeBeforeTeleport);
+        yield return null;
 
-        // 2. الآن (بعد ما انتهى الوقت) الشاشة أكيد صارت سوداء من التايم لاين، ننقل اللاعب بسلام!
-        if (crashSound != null) audioSource.PlayOneShot(crashSound);
+        if (crashSound != null && audioSource != null) audioSource.PlayOneShot(crashSound);
+        
+        // 🌟 تشغيل صوت الانهيار الصخري القوي فوراً خلف الشاشة السوداء ليسمعه اللاعب بوضوح
+        if (collapseSound != null && audioSource != null) audioSource.PlayOneShot(collapseSound);
 
         foreach (GameObject piece in floorPieces)
         {
@@ -59,27 +59,18 @@ public class CinematicCaveTransition : MonoBehaviour
 
         if (cc != null) cc.enabled = true;
 
-        // 3. تشغيل الغبار والأنيميشن والأصوات في مكانها الصحيح داخل الكهف
         if (heavyDust != null) heavyDust.Play(); 
 
+        yield return new WaitForSeconds(wakeupDelay);
+
+        // 🌟 تشغيل أنيميشن الإفاقة مع صوت الكحة في نفس اللحظة لمنع أي خلل
         if (playerAnimator != null && !string.IsNullOrEmpty(wakeupTriggerName))
         {
             playerAnimator.SetTrigger(wakeupTriggerName);
-        }
-
-        if (coughSound != null) 
-        {
-            audioSource.PlayOneShot(coughSound); 
-            StartCoroutine(PlaySecondCough(timeBetweenCoughs)); 
-        }
-    }
-
-    IEnumerator PlaySecondCough(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (audioSource != null && coughSound != null)
-        {
-            audioSource.PlayOneShot(coughSound);
+            if (coughSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(coughSound);
+            }
         }
     }
 }

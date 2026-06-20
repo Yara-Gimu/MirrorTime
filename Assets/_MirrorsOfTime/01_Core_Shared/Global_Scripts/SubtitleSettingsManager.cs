@@ -1,35 +1,34 @@
 using UnityEngine;
-using UnityEngine.UI; // مهم عشان نقدر نتعامل مع الـ Toggle
+using UnityEngine.UI;
 
 public class SubtitleSettingsManager : MonoBehaviour
 {
     [Header("UI Elements")]
-    public GameObject subtitleTextObject; // هنا بنسحب الـ Subtitle_Text تبع الترجمة
-    public Toggle subtitlesToggle; // هنا بنسحب زر الـ Toggle
+    public Toggle subtitlesToggle; 
 
     private void Start()
     {
-        // 1. نقرأ الإعداد المحفوظ من قبل (إذا ما كان في حفظ سابق، نعتبره 1 يعني شغال)
+        // قراءة الإعداد المحفوظ
         int isSubtitlesOn = PlayerPrefs.GetInt("SubtitlesEnabled", 1);
         
-        // 2. نحدث شكل زر الـ Toggle في بداية اللعبة
-        subtitlesToggle.isOn = isSubtitlesOn == 1;
+        // تطبيق الإعداد برمجياً على الزر
+        subtitlesToggle.SetIsOnWithoutNotify(isSubtitlesOn == 1);
 
-        // 3. نطبق الإعداد على النص
-        subtitleTextObject.SetActive(subtitlesToggle.isOn);
-
-        // 4. نربط الدالة بالزر عشان تشتغل كل ما اللاعب يغير الخيار
+        // ربط الدالة بالزر
         subtitlesToggle.onValueChanged.AddListener(OnSubtitleToggleChanged);
     }
 
-    // هذه الدالة تشتغل كل ما اللاعب ضغط على زر التفعيل
     public void OnSubtitleToggleChanged(bool isEnabled)
     {
-        // إظهار أو إخفاء نص الترجمة بناءً على اختيار اللاعب
-        subtitleTextObject.SetActive(isEnabled);
-
-        // حفظ الخيار عشان ما يضطر اللاعب يعدله كل مرة يفتح اللعبة
+        // حفظ الإعداد الجديد
         PlayerPrefs.SetInt("SubtitlesEnabled", isEnabled ? 1 : 0);
         PlayerPrefs.Save();
+
+        // 🌟 السطر السحري الجديد:
+        // إذا قامت اللاعبة بإطفاء الترجمة الآن، قم بإخفاء أي نص موجود على الشاشة فوراً!
+        if (!isEnabled && SubtitleManager.Instance != null)
+        {
+            SubtitleManager.Instance.HideSubtitle();
+        }
     }
 }

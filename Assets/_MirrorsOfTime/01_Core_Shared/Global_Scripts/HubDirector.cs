@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Playables; // عشان نتحكم بالـ Timeline
+using UnityEngine.SceneManagement; // 💡 أضفنا هذه المكتبة عشان نقدر نجلب اسم المشهد الحالي
 
 public class HubDirector : MonoBehaviour
 {
@@ -32,7 +33,9 @@ public class HubDirector : MonoBehaviour
 
         // 3. تحديث الحفظ عشان ما ينعاد المشهد مستقبلاً
         SaveManager.Instance.hasSeenHubIntro = true;
-        SaveManager.Instance.SaveGame();
+        
+        // ✨ الإصلاح هنا: أرسلنا موقع نوار الفعلي واسم المشهد الحالي لدالة الحفظ
+        SaveManager.Instance.SaveGame(playerCharacter.transform.position, SceneManager.GetActiveScene().name);
         
         // (تقدرين تستخدمين الـ EventManager هنا عشان ترجعين التحكم لنوار بعد ما يخلص التايم لاين)
     }

@@ -18,29 +18,30 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 477120024576
-    m_Localized: "Je ne pensais pas que mon voyage \xE0 Mada'in Saleh... me m\xE8nerait
-      ici."
+  - m_Id: 6742177569951744
+    m_Localized: "...C'\xE9tait une carte."
     m_Metadata:
       m_Items: []
-  - m_Id: 580698361856
-    m_Localized: "Toutes les tombes \xE9taient vides."
+  - m_Id: 6742172834582528
+    m_Localized: "Ces lieux se souviennent encore... et le manuscrit n'\xE9tait pas
+      un mythe."
     m_Metadata:
       m_Items: []
-  - m_Id: 616366723072
-    m_Localized: ...sauf celle-ci.
+  - m_Id: 6742149170319360
+    m_Localized: "...Mais l'Acad\xE9mie avait tort."
     m_Metadata:
       m_Items: []
-  - m_Id: 636637794304
-    m_Localized: "Mais... quelque chose m'attendait l\xE0-bas."
+  - m_Id: 6742115204845568
+    m_Localized: "Et que ce manuscrit n'\xE9tait qu'un mythe."
     m_Metadata:
       m_Items: []
-  - m_Id: 667696615424
-    m_Localized: Et maintenant...
+  - m_Id: 6742080794775552
+    m_Localized: "Ici Nawar... Pendant des ann\xE9es, en tant qu'arch\xE9ologue,
+      on m'a dit que ces endroits n'\xE9taient que des ruines sans vie..."
     m_Metadata:
       m_Items: []
-  - m_Id: 689460858880
-    m_Localized: "...je suis coinc\xE9e ici."
+  - m_Id: 6742053976395776
+    m_Localized: Journal de bord... Jour trois.
     m_Metadata:
       m_Items: []
   - m_Id: 724982419456
@@ -69,6 +70,145 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 9435209650176
     m_Localized: ' '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688499558993920
+    m_Localized: "\xC9crit de bas en haut... 'Par Nata'. Comme s'il \xE9tait pass\xE9
+      \xE0 la h\xE2te, refusant de partir sans laisser de trace."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7688884822593536
+    m_Localized: "Sabig bin Kharba... Il voulait de toute \xE9vidence qu'on se souvienne
+      de lui. Son nom m\xEAme \xE9voque la puissance, comme un avertissement pour
+      les suivants."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7689553726001152
+    m_Localized: "Ces mots sont plus qu'une simple pri\xE8re... L'auteur \xE9tait
+      en grande d\xE9tresse. Il a laiss\xE9 ici un appel aux cieux, dans l'espoir
+      d'\xEAtre entendu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690195274158080
+    m_Localized: "C'est d\xE9chirant de voir comment certaines \xE9motions traversent
+      le temps... Quelqu'un a implor\xE9 les cieux ici apr\xE8s le d\xE9part de Salim.
+      \xC9tait-ce un mari ou un amant ? La douleur est grav\xE9e dans chaque lettre."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690467144749056
+    m_Localized: "La s\xE9cheresse a d\xFB \xEAtre terrible ici. Quand les gens supplient
+      leurs dieux pour obtenir de la pluie, c'est que la terre a atteint un point
+      de non-retour."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690698187984896
+    m_Localized: "Contrairement \xE0 ce que l'on pourrait croire, l'auteur n'a pas
+      cach\xE9 ses d\xE9sirs personnels. Il les a grav\xE9s franchement dans la pierre
+      pour la post\xE9rit\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7690894959562752
+    m_Localized: "Il semble que l'auteur ait quitt\xE9 la vie nomade \xE0 cause de
+      la pauvret\xE9. Cette inscription sugg\xE8re que certains Thamud\xE9ens ont
+      migr\xE9 vers les villes pour une vie meilleure."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691127919595520
+    m_Localized: "Une autre inscription documentant exactement le m\xEAme chagrin...
+      \"Salim est parti\". Il semble que son histoire \xE9tait connue de tous, ou
+      peut-\xEAtre est-elle revenue graver sa douleur une fois de plus ailleurs."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691387874168832
+    m_Localized: "Il cherchait une chance que le temps ne pourrait briser. Parfois,
+      une courte phrase suffit pour r\xE9v\xE9ler le lourd fardeau que portait son
+      auteur."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691536629354496
+    m_Localized: "L'inscription indique des tombes construites sur une colline voisine.
+      Peut-\xEAtre que cet emplacement a \xE9t\xE9 choisi d\xE9lib\xE9r\xE9ment pour
+      rester visible aux vivants."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7691845879582720
+    m_Localized: "'\xC0 Wahab El'... Une inscription tr\xE8s br\xE8ve. Une simple
+      preuve d'existence pour quelqu'un qui voulait lier son nom \xE0 ses dieux,
+      pour rester sous leur protection."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692042076540928
+    m_Localized: "'Par Muqim'... Ce nom a \xE9t\xE9 grav\xE9 verticalement ici. Parfois,
+      tout ce qu'une personne cherche, c'est de ne pas \xEAtre oubli\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692306187669504
+    m_Localized: "Cette inscription est cruciale... Elle nous apprend que les habitants
+      de cette terre n'\xE9taient pas seulement des nomades ; ils pratiquaient l'agriculture
+      il y a plusieurs si\xE8cles."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692505362583552
+    m_Localized: "Tout ce qui est grav\xE9 dans la pierre n'est pas forc\xE9ment
+      profond... Il semble que cette inscription soit juste une moquerie envers un
+      nomm\xE9 Sharaf. Les humains n'ont vraiment pas beaucoup chang\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692696350216192
+    m_Localized: "'Hajjaj' est un nom ancien et bien connu. Peut-\xEAtre a-t-il \xE9t\xE9
+      nomm\xE9 ainsi parce qu'il est n\xE9 pendant une saison de p\xE8lerinage ou
+      un \xE9v\xE9nement religieux majeur."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7692927041130496
+    m_Localized: "'Salutations de Sad et Ali'... Une inscription r\xE9unissant deux
+      fr\xE8res. Ce qui est beau ici, c'est que leur m\xE8re, 'Nima', est mentionn\xE9e
+      avec eux ; peut-\xEAtre avait-elle un rang \xE9lev\xE9 ou \xE9tait-elle profond\xE9ment
+      aim\xE9e."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693144008282112
+    m_Localized: "'Par Ra\u2019ab bin Jamam'... Juste un nom grav\xE9 discr\xE8tement.
+      Qui sait quelle vie cet homme a men\xE9e avant de finir comme un souvenir silencieux
+      sur ce mur."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693346932903936
+    m_Localized: "Poss\xE9der une jument pur-sang \xE9tait un signe de statut et
+      de richesse. Il semble que l'auteur \xE9tait incroyablement fier de son bien."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693554395762688
+    m_Localized: "'Jaba bin Af'... Une inscription tr\xE8s br\xE8ve. Peut-\xEAtre
+      n'avait-il pas le temps d'\xE9crire davantage, ou son seul nom suffisait-il
+      pour que tout le monde le reconnaisse."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7693780376473600
+    m_Localized: "'A'a montait la garde'... Ce n'est pas juste un souvenir. Il semble
+      que quelqu'un montait la garde ici, laissant cette marque pour documenter une
+      longue veille dans cet endroit d\xE9sol\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694138188353536
+    m_Localized: "'Par Basil'... Il a choisi un nom qui refl\xE8te sa bravoure, s'assurant
+      qu'il reste grav\xE9 dans la pierre tout comme il l'\xE9tait dans la m\xE9moire
+      de ceux qui l'ont connu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694335995924480
+    m_Localized: "Cette inscription est diff\xE9rente... Elle a \xE9t\xE9 \xE9crite
+      pour un fr\xE8re tourment\xE9. Une simple pri\xE8re, mais qui r\xE9v\xE8le
+      la profondeur de l'amour qui les unissait."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7694353498755072
+    m_Localized: "L'auteur de cette inscription n'a demand\xE9 ni richesse ni gloire...
+      Tout ce qu'il voulait, c'\xE9tait la fin de son calvaire."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761095872860160
+    m_Localized: Lire l'inscription
     m_Metadata:
       m_Items: []
   references:

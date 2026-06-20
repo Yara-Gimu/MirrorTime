@@ -1,82 +1,76 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; 
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using UnityEngine.EventSystems; 
 
 public class MainMenuManager : MonoBehaviour
 {
-    [Header("Buttons")]
-    public Button continueButton; 
+    [Header("--- الأزرار الرئيسية (لتركيز اليد) ---")]
+    public GameObject continueButton; 
+    public GameObject newGameButton;  
+    
+    [Header("--- أول زر في القوائم الأخرى (لتركيز اليد) ---")]
+    public GameObject settingsFirstElement; 
+    public GameObject creditsFirstElement; 
 
     [Header("Panels")]
     public GameObject mainButtonsPanel; 
     public GameObject settingsPanel;    
-    public GameObject creditsPanel;    
+    public GameObject creditsPanel;     
 
     [Header("Scenes Configuration")]
-    [Tooltip("اسم مشهد البداية (ممر العلا)")]
     public string newGameSceneName = "Level_01_AlUla"; 
-    [Tooltip("اسم مشهد الغرفة الحارسة")]
     public string hubWorldSceneName = "The Hub World"; 
 
     void Start()
     {
-        // 🏗️ الترقية المعمارية: 
-        // بدلاً من PlayerPrefs، سنسأل مدير الحفظ (الذي سنبنيه لاحقاً)
-        // bool hasSave = SaveManager.Instance.HasSaveData();
-        
-        // مؤقتاً لحين بناء الـ SaveManager، سنستخدم طريقة بسيطة
-        bool hasSave = PlayerPrefs.HasKey("HasPlayedBefore"); 
-
-        if (hasSave) 
-        {
-            continueButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            continueButton.gameObject.SetActive(false);
-        }
+        bool hasSave = SaveManager.Instance.HasSaveData();
+        continueButton.gameObject.SetActive(hasSave);
 
         settingsPanel.SetActive(false);
         creditsPanel.SetActive(false);
         mainButtonsPanel.SetActive(true);
+
+        SetFocusTo(hasSave ? continueButton : newGameButton);
     }
 
     public void OnNewGameClicked()
     {
-        // 🏗️ الترقية المعمارية (قريباً):
-        // SaveManager.Instance.StartNewGame(); // تصفير الحفظ القديم
-        // EventManager.Trigger("Telemetry_NewGameStarted"); // إرسال إشارة للبيانات
+        SaveManager.Instance.StartNewGame();
+        EventManager.TriggerEvent("Telemetry_NewGameStarted");
 
-        PlayerPrefs.SetInt("HasPlayedBefore", 1); 
-        PlayerPrefs.Save();
+        Time.timeScale = 1f; // 🌟 أمان لضمان عدم تجمد المشهد الجديد
 
-        if (FadeManager.instance != null)
-            FadeManager.instance.LoadSceneSmoothly(newGameSceneName);
-        else
-            SceneManager.LoadScene(newGameSceneName); 
+        if (FadeManager.instance != null) FadeManager.instance.LoadSceneSmoothly(newGameSceneName);
+        else UnityEngine.SceneManagement.SceneManager.LoadScene(newGameSceneName);
     }
 
-    public void OnContinueClicked()
+public void OnContinueClicked()
     {
-        // 🏗️ الترقية المعمارية (قريباً):
-        // EventManager.Trigger("Telemetry_GameContinued"); 
+        EventManager.TriggerEvent("Telemetry_GameContinued"); 
 
-        if (FadeManager.instance != null)
-            FadeManager.instance.LoadSceneSmoothly(hubWorldSceneName);
-        else
-            SceneManager.LoadScene(hubWorldSceneName);
+        Time.timeScale = 1f; 
+
+        // 🌟 الإصلاح السحري: جلب اسم المشهد الفعلي الذي وقف فيه اللاعب من ملف الحفظ مباشرة بدلاً من كتابته يدوياً!
+        string actualSavedScene = SaveManager.Instance.gameData.currentSceneName;
+
+        if (FadeManager.instance != null) 
+            FadeManager.instance.LoadSceneSmoothly(actualSavedScene);
+        else 
+            UnityEngine.SceneManagement.SceneManager.LoadScene(actualSavedScene);
     }
 
     public void OnSettingsClicked()
     {
         mainButtonsPanel.SetActive(false); 
-        settingsPanel.SetActive(true);    
+        settingsPanel.SetActive(true); 
+        SetFocusTo(settingsFirstElement);
     }
 
     public void OnCreditsClicked()
     {
         mainButtonsPanel.SetActive(false);
         creditsPanel.SetActive(true);
+        SetFocusTo(creditsFirstElement);
     }
 
     public void OnBackClicked() 
@@ -84,11 +78,22 @@ public class MainMenuManager : MonoBehaviour
         settingsPanel.SetActive(false);
         creditsPanel.SetActive(false);
         mainButtonsPanel.SetActive(true); 
+        
+        bool hasSave = SaveManager.Instance.HasSaveData();
+        SetFocusTo(hasSave ? continueButton : newGameButton);
     }
 
     public void OnQuitClicked()
     {
         Application.Quit();
-        Debug.Log("Game Closed"); 
+    }
+
+    private void SetFocusTo(GameObject target)
+    {
+        if (target != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null); 
+            EventSystem.current.SetSelectedGameObject(target); 
+        }
     }
 }

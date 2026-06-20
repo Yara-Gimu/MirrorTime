@@ -171,6 +171,86 @@ MonoBehaviour:
     m_Localized: Show Subtitles
     m_Metadata:
       m_Items: []
+  - m_Id: 58575609576673280
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575636638322688
+    m_Localized: Sprint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58575656003424256
+    m_Localized: Look Around
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61107432533905408
+    m_Localized: Translate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68012090896535552
+    m_Localized: Resolution
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68017059213201408
+    m_Localized: Camera Sensitivity
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68020490925625344
+    m_Localized: Field of View (FOV)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68205953036701696
+    m_Localized: Motion Blur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68207681672957952
+    m_Localized: VSync
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209046180712448
+    m_Localized: Camera Shake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68209076614582272
+    m_Localized: Controller Vibration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68282311716753408
+    m_Localized: Voice Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287250497130496
+    m_Localized: Anti-Aliasing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287584309202944
+    m_Localized: Shadow Quality
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68287855429013504
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288037654745088
+    m_Localized: Hard Only
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68288210690756608
+    m_Localized: All Shadows
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290285940101120
+    m_Localized: 8x
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290283205414912
+    m_Localized: 4x
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68290280344899584
+    m_Localized: 2x
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
