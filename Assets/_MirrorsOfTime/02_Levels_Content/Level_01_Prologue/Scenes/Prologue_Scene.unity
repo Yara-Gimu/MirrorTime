@@ -27826,7 +27826,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39bed9d5f347acd40945763dc42c3dc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheckpointTrigger
-  hasSaved: 0
+  checkpointID: Flowers_Save_1
+  hasSavedLocal: 0
 --- !u!65 &634485857
 BoxCollider:
   m_ObjectHideFlags: 0

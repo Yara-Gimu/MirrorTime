@@ -4,23 +4,32 @@ using UnityEngine.SceneManagement;
 public class CheckpointTrigger : MonoBehaviour
 {
     [Header("إعدادات نقطة الحفظ")]
-    [Tooltip("يفعل هذا الخيار نفسه تلقائياً بعد الحفظ لكي لا تتكرر العملية")]
-    public bool hasSaved = false;
+    public string checkpointID = "Flowers_Save_1"; 
+    public bool hasSavedLocal = false; 
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        // نتأكد أن المجسم الذي مر من هنا هو "نوار" (يجب أن يكون التاق الخاص بها Player)
-        // ونتأكد أنه لم يتم الحفظ في هذه النقطة مسبقاً
-        if (other.CompareTag("Player") && !hasSaved)
+        if (!other.CompareTag("Player")) return;
+
+        // إذا حفظنا من قبل، لا تفعل شيئاً
+        if (hasSavedLocal || PlayerPrefs.GetInt(checkpointID, 0) == 1) return;
+
+        // 1. استدعاء مدير الحفظ الفعلي لحفظ بيانات نوار
+        if (SaveManager.Instance != null)
         {
-            hasSaved = true;
-
-            // نأخذ موقع نوار واسم المشهد ونرسله للمدير ليقوم بالحفظ
             SaveManager.Instance.SaveGame(other.transform.position, SceneManager.GetActiveScene().name);
-
-            Debug.Log("✨ تم الوصول لنقطة الحفظ!");
-            
-            // 💡 ملاحظة للتطوير: يمكنك هنا إضافة كود تشغيل أيقونة حفظ صغيرة في زاوية الشاشة
+            Debug.Log($"💾 [Checkpoint] {checkpointID} تم الحفظ بنجاح!");
         }
+
+        // 2. استدعاء لوحة الحفظ الزاويّة الهادئة
+        if (SaveNotificationManager.Instance != null)
+        {
+            SaveNotificationManager.Instance.ShowSaveNotification();
+        }
+
+        // 3. إقفال هذه النقطة للأبد
+        hasSavedLocal = true;
+        PlayerPrefs.SetInt(checkpointID, 1);
+        PlayerPrefs.Save();
     }
 }

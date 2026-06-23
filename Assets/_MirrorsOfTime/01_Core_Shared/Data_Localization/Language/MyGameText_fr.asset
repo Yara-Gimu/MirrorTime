@@ -245,6 +245,46 @@ MonoBehaviour:
     m_Localized: 2x
     m_Metadata:
       m_Items: []
+  - m_Id: 68379339398434816
+    m_Localized: REC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379529056473088
+    m_Localized: Zoom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379582181527552
+    m_Localized: Grille
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379598820331520
+    m_Localized: Capturer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379621054337024
+    m_Localized: Sauvegarder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379637605060608
+    m_Localized: Refaire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379652801024000
+    m_Localized: "Sauvegard\xE9 !"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69005695039688704
+    m_Localized: "Mode Photo D\xE9bloqu\xE9!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69005713972776960
+    m_Localized: "pour capturer la beaut\xE9."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69373510032674816
+    m_Localized: Sauvegarde...
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

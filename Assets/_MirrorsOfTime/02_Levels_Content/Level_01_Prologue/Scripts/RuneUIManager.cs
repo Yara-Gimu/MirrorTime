@@ -15,10 +15,10 @@ public class RuneUIManager : MonoBehaviour
     public Button closeButton; 
 
     [Header("أيقونات الإغلاق (حسب الجهاز)")]
-    public Image closeIconImage; // 🌟 اسحبي الصورة التي ستتغير هنا
-    public Sprite kbCloseIcon;   // 🌟 صورة زر ESC أو Backspace
-    public Sprite xboxCloseIcon; // 🌟 صورة زر B
-    public Sprite psCloseIcon;   // 🌟 صورة زر الدائرة
+    public Image closeIconImage; 
+    public Sprite kbCloseIcon;   
+    public Sprite xboxCloseIcon; 
+    public Sprite psCloseIcon;   
 
     [Header("إعدادات الترجمة")]
     public string tableName = "SubtitlesTable"; 
@@ -32,7 +32,6 @@ public class RuneUIManager : MonoBehaviour
     {
         Instance = this;
         if (readerPanel != null) readerPanel.SetActive(false);
-        if (runeTextDisplay != null) runeTextDisplay.isRightToLeftText = true;
 
         if (closeButton != null)
             closeButton.onClick.AddListener(HideRune);
@@ -63,14 +62,22 @@ public class RuneUIManager : MonoBehaviour
     {
         if (readerPanel != null) readerPanel.SetActive(true);
 
-        UpdateCloseIcon(); // 🌟 تحديث صورة الزر فور فتح اللوحة
+        UpdateCloseIcon(); 
 
         Time.timeScale = 0f; 
 
         if (runeTextDisplay != null)
         {
+            // جلب الترجمة من الجدول مباشرة بدون أي تدخل برمجي في الاتجاه
             LocalizationSettings.StringDatabase.GetLocalizedStringAsync(tableName, key).Completed += (h) => {
-                runeTextDisplay.text = h.IsDone ? h.Result : "Error";
+                if (h.IsDone)
+                {
+                    runeTextDisplay.text = h.Result;
+                }
+                else
+                {
+                    runeTextDisplay.text = "Error";
+                }
             };
         }
 
@@ -91,7 +98,6 @@ public class RuneUIManager : MonoBehaviour
         Time.timeScale = 1f; 
     }
 
-    // 🌟 الدالة الجديدة لمعرفة الجهاز وتغيير أيقونة زر الخروج
     private void UpdateCloseIcon()
     {
         if (closeIconImage == null) return;

@@ -245,6 +245,46 @@ MonoBehaviour:
     m_Localized: 2x
     m_Metadata:
       m_Items: []
+  - m_Id: 68379339398434816
+    m_Localized: REC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379529056473088
+    m_Localized: Zoom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379582181527552
+    m_Localized: Raster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379598820331520
+    m_Localized: Aufnehmen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379621054337024
+    m_Localized: Speichern
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379637605060608
+    m_Localized: Wiederholen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379652801024000
+    m_Localized: Gespeichert!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69005695039688704
+    m_Localized: Fotomodus Entsperrt!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69005713972776960
+    m_Localized: "um die Sch\xF6nheit festzuhalten."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69373510032674816
+    m_Localized: Speichern...
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

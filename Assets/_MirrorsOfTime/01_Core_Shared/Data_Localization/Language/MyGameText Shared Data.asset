@@ -241,6 +241,46 @@ MonoBehaviour:
     m_Key: UI_SETTINGS_X8
     m_Metadata:
       m_Items: []
+  - m_Id: 68379339398434816
+    m_Key: PM_UI_REC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379529056473088
+    m_Key: PM_UI_ZOOM
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379582181527552
+    m_Key: PM_UI_GRID
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379598820331520
+    m_Key: PM_UI_CAPTURE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379621054337024
+    m_Key: PM_UI_SAVE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379637605060608
+    m_Key: PM_UI_RETAKE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 68379652801024000
+    m_Key: PM_MSG_SAVED
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69005695039688704
+    m_Key: PM_NOTIFY_TITLE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69005713972776960
+    m_Key: PM_NOTIFY_BODY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 69373510032674816
+    m_Key: UI_SAVING
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

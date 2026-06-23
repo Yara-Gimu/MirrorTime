@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "‏‏MirrorTime - نسخة.slnx"
+    "dotnet.defaultSolution": "‏‏MirrorTime.slnx"
 }
