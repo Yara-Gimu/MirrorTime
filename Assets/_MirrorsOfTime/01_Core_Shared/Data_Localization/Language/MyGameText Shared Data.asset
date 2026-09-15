@@ -281,6 +281,18 @@ MonoBehaviour:
     m_Key: UI_SAVING
     m_Metadata:
       m_Items: []
+  - m_Id: 97948122328715264
+    m_Key: SKILL_FREEZE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948574520823808
+    m_Key: SKILL_REWIND
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948746822832128
+    m_Key: SKILL_FASTFORWARD
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

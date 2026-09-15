@@ -285,6 +285,18 @@ MonoBehaviour:
     m_Localized: Speichern...
     m_Metadata:
       m_Items: []
+  - m_Id: 97948122328715264
+    m_Localized: Einfrieren
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948574520823808
+    m_Localized: "Zur\xFCckspulen"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948746822832128
+    m_Localized: Beschleunigen
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

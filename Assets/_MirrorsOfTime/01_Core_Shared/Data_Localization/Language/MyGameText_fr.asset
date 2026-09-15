@@ -285,6 +285,18 @@ MonoBehaviour:
     m_Localized: Sauvegarde...
     m_Metadata:
       m_Items: []
+  - m_Id: 97948122328715264
+    m_Localized: Gel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948574520823808
+    m_Localized: Retour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948746822832128
+    m_Localized: "Acc\xE9l\xE9ration"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

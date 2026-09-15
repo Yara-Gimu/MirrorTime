@@ -291,6 +291,18 @@ MonoBehaviour:
     m_Localized: Saving...
     m_Metadata:
       m_Items: []
+  - m_Id: 97948122328715264
+    m_Localized: Freeze
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948574520823808
+    m_Localized: Rewind
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97948746822832128
+    m_Localized: Fast Forward
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
